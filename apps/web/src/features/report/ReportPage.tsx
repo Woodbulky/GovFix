@@ -17,7 +17,7 @@ import { PhotoStep } from './PhotoStep';
 
 const STEPS = ['issue', 'location', 'photos', 'review'] as const;
 const NOT_SURE = '';
-const btn = 'inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md px-5 font-semibold';
+const btn = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-5 font-semibold';
 
 type Created = RpcResult<{ request: { id: string; ticket_no: string } }>;
 
@@ -196,7 +196,7 @@ function Row({ label, onEdit, children }: { label: string; onEdit: () => void; c
         <dt className="text-sm text-ink-muted">{label}</dt>
         <dd>{children}</dd>
       </div>
-      <button type="button" onClick={onEdit} className="min-h-[44px] px-2 font-medium text-nmc underline">
+      <button type="button" onClick={onEdit} className="min-h-11 px-2 font-medium text-nmc underline">
         {t('report.edit')}
       </button>
     </div>

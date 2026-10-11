@@ -12,7 +12,7 @@ type Located =
   | { found: true; ward_id: number; landmark: { id: number; distance_m: number } | null }
   | { found: false; message: string };
 
-const select = 'mt-1 block min-h-[48px] w-full rounded-md border border-line bg-surface px-3';
+const select = 'mt-1 block min-h-12 w-full rounded-md border border-line bg-surface px-3';
 
 /** "Near Ghantaghar Chowk, Ward 7 Ghantaghar" in the current language. */
 export function usePlaceLabel(place: Pick<Place, 'ward_id' | 'landmark_id'>) {

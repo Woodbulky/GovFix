@@ -27,7 +27,7 @@ export function NotificationsPage() {
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="mr-auto text-2xl">{t('nav.notifications')}</h1>
         {!!unread && (
-          <button onClick={() => void read()} className="min-h-[44px] rounded-md border border-line bg-surface px-4">
+          <button onClick={() => void read()} className="min-h-11 rounded-md border border-line bg-surface px-4">
             {t('notifications.markAll', { count: unread })}
           </button>
         )}

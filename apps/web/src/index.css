@@ -89,3 +89,8 @@ h4 {
     scroll-behavior: auto !important;
   }
 }
+
+/* The green focus ring vanishes on canopy; marigold is the focus colour on dark (DESIGN.md). */
+.bg-canopy :focus-visible {
+  outline-color: var(--marigold);
+}

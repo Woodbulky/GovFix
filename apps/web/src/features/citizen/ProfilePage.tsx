@@ -9,7 +9,7 @@ import { must } from '@/lib/queries';
 import { rpc, type RpcResult } from '@/lib/rpc';
 import { supabase } from '@/lib/supabase';
 
-const input = 'mt-1 block min-h-[48px] w-full rounded-md border border-line bg-surface px-3';
+const input = 'mt-1 block min-h-12 w-full rounded-md border border-line bg-surface px-3';
 
 export function ProfilePage() {
   const { t, i18n } = useTranslation();
@@ -61,18 +61,14 @@ export function ProfilePage() {
           <p className="text-sm text-ink-muted">{t('profile.languageHint')}</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {LANGS.map((l) => (
-              <label
-                key={l}
-                lang={l}
-                className="flex min-h-[48px] items-center gap-2 rounded-md border border-line px-4"
-              >
+              <label key={l} lang={l} className="flex min-h-12 items-center gap-2 rounded-md border border-line px-4">
                 <input type="radio" name="language" value={l} defaultChecked={me.preferred_language === l} />
                 {t(`lang.${l}`)}
               </label>
             ))}
           </div>
         </fieldset>
-        <label className="flex min-h-[48px] items-center gap-3">
+        <label className="flex min-h-12 items-center gap-3">
           <input type="checkbox" name="large" defaultChecked={me.large_text} className="h-5 w-5" />
           <span className="font-medium">{t('largeText')}</span>
         </label>
@@ -83,7 +79,7 @@ export function ProfilePage() {
         </label>
         <button
           disabled={busy}
-          className="min-h-[48px] rounded-md bg-nmc px-5 font-semibold text-white disabled:opacity-60"
+          className="min-h-12 rounded-md bg-nmc px-5 font-semibold text-white disabled:opacity-60"
         >
           {t('profile.save')}
         </button>

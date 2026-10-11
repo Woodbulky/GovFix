@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { useRequestTitle } from './ComplaintCard';
 import { type MyRequest, useMyRequest, usePhotoUrls } from './hooks';
 
-const btn = 'inline-flex min-h-[48px] items-center justify-center rounded-md px-5 font-semibold disabled:opacity-60';
+const btn = 'inline-flex min-h-12 items-center justify-center rounded-md px-5 font-semibold disabled:opacity-60';
 const area = 'mt-1 block w-full rounded-md border border-line bg-surface p-3';
 
 export function ComplaintDetail() {

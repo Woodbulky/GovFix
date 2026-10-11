@@ -7,7 +7,7 @@ import { useAppSettings } from '@/lib/queries';
 import { nameOf, useCategories } from '@/lib/reference';
 import { DepartmentList } from './Departments';
 
-const button = 'inline-flex min-h-[48px] items-center rounded-md px-5 font-semibold';
+const button = 'inline-flex min-h-12 items-center rounded-md px-5 font-semibold';
 
 /** Category tiles from the database. Each opens the typed report with that category picked. */
 export function CategoryTiles() {

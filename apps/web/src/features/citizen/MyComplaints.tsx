@@ -33,7 +33,7 @@ export function MyComplaints() {
             aria-pressed={tab === k}
             onClick={() => setTab(k)}
             className={cn(
-              'min-h-[44px] whitespace-nowrap rounded-sm px-3 font-medium',
+              'min-h-11 whitespace-nowrap rounded-sm px-3 font-medium',
               tab === k ? 'bg-nmc text-white' : 'bg-surface',
             )}
           >
