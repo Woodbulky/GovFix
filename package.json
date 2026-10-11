@@ -13,7 +13,7 @@
     "build": "npm -w apps/web run build",
     "ai": "uv run --project services/ai uvicorn app.main:app --app-dir services/ai --port 8787 --reload",
     "db:push": "tsx --env-file=.env scripts/db-push.ts",
-    "db:types": "supabase gen types typescript --project-id xwojruafxtczmqwsasgk --schema public > apps/web/src/lib/database.types.ts",
+    "db:types": "tsx --env-file=.env scripts/db-types.ts",
     "seed:users": "tsx --env-file=.env scripts/seed-users.ts",
     "ai:password": "tsx --env-file=.env scripts/set-ai-writer-password.ts",
     "gen:workflow": "tsx scripts/gen-workflow.ts",
