@@ -470,6 +470,9 @@ isOneToOne: false
 "now_sim":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
+"preview_deadline":
+{ Args: { "p_category_code": string,"p_request_id": string }; Returns: string
+                           },
 "public_markers":
 { Args: Record<PropertyKey, never>; Returns: {
               "age_hours": number,"category_code": string,"escalation_level": number,"sla_status": string,"state": Database["public"]['Enums']["request_state"],"ward_id": number,"x": number,"z": number

@@ -33,6 +33,13 @@ import { DepartmentsPage } from '@/features/public/Departments';
 import { PublicHome } from '@/features/public/PublicHome';
 import { TrackPage } from '@/features/public/TrackPage';
 import { ReportPage } from '@/features/report/ReportPage';
+import { Board } from '@/features/department/Board';
+import { Escalations, Officers, ToAssign } from '@/features/department/Lists';
+import { MyWork } from '@/features/officer/MyWork';
+import { RequestDetail } from '@/features/request-detail/RequestDetail';
+import { AllRequests } from '@/features/triage/AllRequests';
+import { Duplicates } from '@/features/triage/Duplicates';
+import { TriageQueue } from '@/features/triage/TriageQueue';
 import { Soon } from './pages';
 
 export type AppRoute = {
@@ -49,7 +56,7 @@ export type AppRoute = {
 const STAFF: Role[] = ['officer', 'dept_head', 'manager', 'commissioner'];
 const soon = (key: string, phase: string) => <Soon titleKey={`nav.${key}`} phase={phase} />;
 
-// ponytail: placeholder screens; P5 (staff), P8 (city) and P9 (admin) swap in the real elements.
+// ponytail: placeholder screens; P8 (city) and P9 (admin) swap in the real elements.
 export const ROUTES: AppRoute[] = [
   // Public, also reachable when signed in
   { path: '/', key: 'home', icon: House, access: 'anyone', element: <PublicHome /> },
@@ -77,26 +84,26 @@ export const ROUTES: AppRoute[] = [
   },
   { path: '/profile', key: 'profile', icon: User, access: ['citizen'], element: <ProfilePage /> },
   // Staff
-  { path: '/requests/:id', key: 'request', icon: Inbox, access: STAFF, element: soon('request', 'P5') },
-  { path: '/officer', key: 'myWork', icon: ListChecks, access: ['officer'], element: soon('myWork', 'P5') },
-  { path: '/dept', key: 'board', icon: SquareKanban, access: ['dept_head'], element: soon('board', 'P5') },
-  { path: '/dept/assign', key: 'toAssign', icon: UserPlus, access: ['dept_head'], element: soon('toAssign', 'P5') },
-  { path: '/dept/officers', key: 'officers', icon: Users, access: ['dept_head'], element: soon('officers', 'P5') },
+  { path: '/requests/:id', key: 'request', icon: Inbox, access: STAFF, element: <RequestDetail /> },
+  { path: '/officer', key: 'myWork', icon: ListChecks, access: ['officer'], element: <MyWork /> },
+  { path: '/dept', key: 'board', icon: SquareKanban, access: ['dept_head'], element: <Board /> },
+  { path: '/dept/assign', key: 'toAssign', icon: UserPlus, access: ['dept_head'], element: <ToAssign /> },
+  { path: '/dept/officers', key: 'officers', icon: Users, access: ['dept_head'], element: <Officers /> },
   {
     path: '/escalations',
     key: 'escalations',
     icon: ShieldAlert,
     access: ['dept_head', 'commissioner'],
-    element: soon('escalations', 'P5'),
+    element: <Escalations />,
   },
-  { path: '/triage', key: 'triage', icon: Inbox, access: ['manager'], element: soon('triage', 'P5') },
-  { path: '/triage/duplicates', key: 'duplicates', icon: Copy, access: ['manager'], element: soon('duplicates', 'P5') },
+  { path: '/triage', key: 'triage', icon: Inbox, access: ['manager'], element: <TriageQueue /> },
+  { path: '/triage/duplicates', key: 'duplicates', icon: Copy, access: ['manager'], element: <Duplicates /> },
   {
     path: '/requests',
     key: 'allRequests',
     icon: Table2,
     access: ['manager', 'commissioner'],
-    element: soon('allRequests', 'P5'),
+    element: <AllRequests />,
   },
   // Commissioner
   { path: '/admin', key: 'overview', icon: LayoutDashboard, access: ['commissioner'], element: soon('overview', 'P9') },

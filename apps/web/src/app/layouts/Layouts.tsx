@@ -1,10 +1,12 @@
 import { Leaf } from 'lucide-react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { Toaster } from '@/components/Toaster';
 import { useAuth } from '@/features/auth/store';
 import { useNotifications } from '@/features/citizen/hooks';
 import { useDemoMode } from '@/lib/queries';
+import { rpc } from '@/lib/rpc';
 import { cn } from '@/lib/utils';
 import { navFor } from '../routes';
 import { HeaderControls } from './HeaderControls';
@@ -98,6 +100,11 @@ function TopBarLayout() {
 
 /** Staff screens: 240 px canopy sidebar (a strip under the header on small screens). */
 function StaffLayout() {
+  // Idempotent; covers venues where pg_cron is late or unavailable (WORKFLOW.md).
+  useEffect(() => {
+    const id = setInterval(() => void rpc('run_escalation_sweep', {}).catch(() => {}), 30_000);
+    return () => clearInterval(id);
+  }, []);
   return (
     <div className="min-h-screen md:flex">
       <SkipLink />
