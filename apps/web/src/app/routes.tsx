@@ -40,6 +40,12 @@ import { RequestDetail } from '@/features/request-detail/RequestDetail';
 import { AllRequests } from '@/features/triage/AllRequests';
 import { Duplicates } from '@/features/triage/Duplicates';
 import { TriageQueue } from '@/features/triage/TriageQueue';
+import { ApiConsole } from '@/features/admin/ApiConsole';
+import { AuditLog } from '@/features/admin/AuditLog';
+import { Overview } from '@/features/admin/Overview';
+import { TimeMachine } from '@/features/admin/TimeMachine';
+import { Users as UsersPage } from '@/features/admin/Users';
+import { WorkflowSla } from '@/features/admin/WorkflowSla';
 import { Soon } from './pages';
 
 export type AppRoute = {
@@ -56,7 +62,7 @@ export type AppRoute = {
 const STAFF: Role[] = ['officer', 'dept_head', 'manager', 'commissioner'];
 const soon = (key: string, phase: string) => <Soon titleKey={`nav.${key}`} phase={phase} />;
 
-// ponytail: placeholder screens; P8 (city) and P9 (admin) swap in the real elements.
+// ponytail: placeholder screens; P8 (city) swaps in the real element.
 export const ROUTES: AppRoute[] = [
   // Public, also reachable when signed in
   { path: '/', key: 'home', icon: House, access: 'anyone', element: <PublicHome /> },
@@ -106,14 +112,14 @@ export const ROUTES: AppRoute[] = [
     element: <AllRequests />,
   },
   // Commissioner
-  { path: '/admin', key: 'overview', icon: LayoutDashboard, access: ['commissioner'], element: soon('overview', 'P9') },
-  { path: '/admin/audit', key: 'audit', icon: ScrollText, access: ['commissioner'], element: soon('audit', 'P9') },
+  { path: '/admin', key: 'overview', icon: LayoutDashboard, access: ['commissioner'], element: <Overview /> },
+  { path: '/admin/audit', key: 'audit', icon: ScrollText, access: ['commissioner'], element: <AuditLog /> },
   {
     path: '/admin/workflow',
     key: 'workflow',
     icon: Workflow,
     access: ['commissioner'],
-    element: soon('workflow', 'P9'),
+    element: <WorkflowSla />,
   },
   {
     path: '/admin/time-machine',
@@ -121,7 +127,7 @@ export const ROUTES: AppRoute[] = [
     icon: TimerReset,
     access: ['commissioner'],
     demo: true,
-    element: soon('timeMachine', 'P9'),
+    element: <TimeMachine />,
   },
   {
     path: '/admin/api-console',
@@ -129,9 +135,9 @@ export const ROUTES: AppRoute[] = [
     icon: Terminal,
     access: ['commissioner'],
     demo: true,
-    element: soon('apiConsole', 'P9'),
+    element: <ApiConsole />,
   },
-  { path: '/admin/users', key: 'users', icon: Users, access: ['commissioner'], element: soon('users', 'P9') },
+  { path: '/admin/users', key: 'users', icon: Users, access: ['commissioner'], element: <UsersPage /> },
 ];
 
 /** Sidebar / top-bar items per role, in docs/PRD.md order. */

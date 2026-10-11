@@ -465,5 +465,107 @@
       "avg": "Avg resolution (h)"
     },
     "refusedAction": "Refused: {{action}}"
+  },
+  "admin": {
+    "all": "All",
+    "pick": "Choose…",
+    "cancel": "Cancel",
+    "noData": "Nothing to show yet.",
+    "overview": {
+      "compliance": "SLA compliance",
+      "complianceHint": "{{onTime}} on time · {{late}} past deadline",
+      "pastNow": "Past deadline now",
+      "l1": "Escalated L1",
+      "l2": "Escalated L2",
+      "openByState": "Open by state",
+      "byDept": "Requests by department",
+      "avgByCat": "Average resolution hours by category",
+      "wardBreaches": "Past deadline by ward",
+      "pastCount_one": "{{count}} past deadline",
+      "pastCount_other": "{{count}} past deadline"
+    },
+    "audit": {
+      "verify": "Verify chain",
+      "intact_one": "Chain intact · {{count}} entry",
+      "intact_other": "Chain intact · {{count}} entries",
+      "broken": "Chain broken at entry #{{id}}",
+      "tamperLabel": "Audit row #",
+      "tamper": "Tamper demo",
+      "tampered": "Row #{{id}} edited without rehashing. Verify the chain to see it caught.",
+      "ticket": "Ticket",
+      "action": "Action",
+      "outcome": "Outcome",
+      "accepted": "Accepted",
+      "refused": "Refused",
+      "col": {
+        "id": "#",
+        "time": "Sim time",
+        "actor": "Actor · role",
+        "channel": "Channel",
+        "ticket": "Ticket",
+        "action": "Action",
+        "change": "From → to",
+        "outcome": "Outcome",
+        "reason": "Code · reason",
+        "hash": "Hash"
+      }
+    },
+    "wf": {
+      "diagram": "Workflow state diagram",
+      "action": "Action",
+      "from": "From",
+      "to": "To",
+      "roles": "Roles",
+      "requires": "Requires",
+      "guards": "Guards"
+    },
+    "sla": {
+      "title": "SLA policy",
+      "hint": "Each save adds a new version. Requests already triaged keep the deadline they got.",
+      "col": {
+        "category": "Category",
+        "hours": "Resolution hours",
+        "since": "Effective from",
+        "versions": "Versions"
+      },
+      "newHours": "New hours",
+      "note": "Note",
+      "save": "Save new version",
+      "saved": "New SLA version saved"
+    },
+    "tm": {
+      "clock": "Sim time",
+      "offset": "Offset from real time: {{hours}} h",
+      "custom": "Custom (hours)",
+      "jump": "Jump",
+      "swept": "Escalation check done: {{escalated}} escalated, {{closed}} auto-closed",
+      "sweep": "Run escalation check now",
+      "aiOffline": "AI offline (keyword classifier only)",
+      "aiOff": "AI is offline: keyword classifier only",
+      "aiOn": "AI is back online",
+      "reset": "Reset demo scenario",
+      "resetConfirm": "Yes, reset everything",
+      "resetDone": "Demo scenario reloaded"
+    },
+    "api": {
+      "hint": "Sends transition_request as the chosen demo user, with their own sign-in. The database decides; every call is audited.",
+      "actAs": "Acting user",
+      "me": "Me (Commissioner)",
+      "ticket": "Ticket",
+      "current": "Current state: {{state}}",
+      "noTicket": "No visible request with that ticket",
+      "action": "Action",
+      "payload": "Payload (JSON)",
+      "send": "Send",
+      "response": "Response",
+      "auditLink": "Open audit row #{{id}}"
+    },
+    "users": {
+      "name": "Name",
+      "role": "Role",
+      "department": "Department",
+      "wards": "Wards",
+      "language": "Language"
+    }
   }
 }

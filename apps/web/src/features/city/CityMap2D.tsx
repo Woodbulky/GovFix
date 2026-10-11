@@ -20,6 +20,8 @@ type Props = {
   /** Called with city metres (x east, z south) when the user clicks the map. */
   onPick?: (x: number, z: number) => void;
   pins?: MapPin[];
+  /** Ward id -> breach fill opacity (0-1); pair it with a text list, never colour alone. */
+  tint?: Record<number, number>;
   className?: string;
 };
 
@@ -27,7 +29,7 @@ type Props = {
  * SVG Navnagar from the same layout JSON as the 3D city and the database (+z south = SVG down).
  * The WebGL-off fallback and, until P8, the location picker.
  */
-export function CityMap2D({ onPick, pins = [], className }: Props) {
+export function CityMap2D({ onPick, pins = [], tint = {}, className }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -49,7 +51,10 @@ export function CityMap2D({ onPick, pins = [], className }: Props) {
       style={{ cursor: onPick ? 'crosshair' : undefined, background: 'var(--paper)' }}
     >
       {city.wards.map((w) => (
-        <polygon key={w.id} points={w.polygon.join(' ')} fill="var(--surface)" stroke="var(--line)" strokeWidth={8} />
+        <g key={w.id}>
+          <polygon points={w.polygon.join(' ')} fill="var(--surface)" stroke="var(--line)" strokeWidth={8} />
+          {tint[w.id] && <polygon points={w.polygon.join(' ')} fill="var(--sla-breach)" fillOpacity={tint[w.id]} />}
+        </g>
       ))}
       {city.river && (
         <polyline

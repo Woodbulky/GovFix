@@ -6,7 +6,7 @@ import { useDemoMode } from '@/lib/queries';
 import { signIn, useAuth } from './store';
 
 // Seeded by scripts/seed-users.ts (docs/PRD.md "Demo users"). Emails only; names come from profiles.
-const USERS: [string, string[]][] = [
+export const DEMO_USERS: [string, string[]][] = [
   ['citizen', ['sunita', 'ramesh', 'aisha']],
   ['officer', ['patil', 'kale', 'more', 'shaikh', 'gaikwad', 'pawar', 'joshi']],
   ['dept_head', ['deshmukh', 'bhosale', 'wagh', 'rao', 'sawant', 'sayyed']],
@@ -40,7 +40,7 @@ export function DemoSwitcher({ dark = false }: { dark?: boolean }) {
         className="min-h-[var(--touch)] rounded-sm border border-line bg-surface px-2 text-ink"
       >
         <option value="">{t('demo.pick')}</option>
-        {USERS.map(([role, handles]) => (
+        {DEMO_USERS.map(([role, handles]) => (
           <optgroup key={role} label={t(`role.${role}`)}>
             {handles.map((h) => (
               <option key={h} value={`${h}@navnagar.test`}>
