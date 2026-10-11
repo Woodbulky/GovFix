@@ -82,7 +82,7 @@ create table profiles (
   role app_role not null default 'citizen',
   department_code text references departments,   -- officers and dept heads
   phone text,                                    -- fictional
-  preferred_language text not null default 'mr' check (preferred_language in ('en','hi','mr')),
+  preferred_language text not null default 'en' check (preferred_language in ('en','hi','mr')),
   large_text boolean not null default false,
   created_at timestamptz not null default now()
 );

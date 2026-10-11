@@ -11,17 +11,21 @@ NIVA is a **channel, not a decision-maker**. It can create a SUBMITTED request (
 ## Setup (Studio does this in the ElevenLabs dashboard; hour 1)
 
 1. Create agent **NIVA**. Paste the system prompt below.
-2. Languages: Marathi, Hindi, English. Pick a natural female voice per language, and note the voice IDs in `.env`. **Test Marathi output first.** If Marathi speech sounds poor, keep Marathi understanding but let NIVA answer in Hindi or English, and record that in PROGRESS.md.
-3. First message: `{{first_message}}` (dynamic variable; the web sends the right language).
-4. Dynamic variables: `user_name`, `user_role`, `language`, `first_message`, `current_page`.
-5. Register the **client tools** below with exactly these names and parameters.
-6. Make the agent private (signed URL via `/niva/session`). Put `ELEVENLABS_AGENT_ID` and `ELEVENLABS_API_KEY` in `.env`.
+2. Languages: **English (default)**, plus Marathi and Hindi as additional languages. Hinglish Mode on (code-mixing is expected). Pick a natural female voice and note the voice IDs in `.env`. **Test Marathi output first.** If Marathi speech sounds poor, keep Marathi understanding but let NIVA answer in Hindi or English, and record that in PROGRESS.md.
+   - The free ElevenLabs plan refuses **library** voices over the API (HTTP 402). Use a premade voice, or add it to My Voices first (that makes a copy the API accepts). Current voice: Sarah (Mature, Reassuring, Confident), copied, `gJU2icYQsdEmbGJ65Z8W`.
+3. First message: `{{first_message}}` in **every** language preset (English, Marathi, Hindi), with nothing else in the box. The web sends the greeting in the user's language (see First messages below).
+4. Dynamic variables: `user_name`, `user_role`, `language`, `first_message`, `current_page`. The web always sends all five. Dashboard test values (English default): `Aisha`, `citizen`, `en`, `home`, and the English first message below.
+5. Overrides (Settings): allow **Language** and **First message**. The agent defaults to English, so the web sets `overrides.agent.language` to the user's `preferred_language` (`mr` for Sunita, `hi` for Ramesh) when it starts the session. Without this, NIVA opens in English and only switches once the user speaks.
+6. Register the **client tools** below with exactly these names and parameters.
+7. Make the agent private (authentication on; signed URL via `/niva/session`). Put `ELEVENLABS_AGENT_ID` and `ELEVENLABS_API_KEY` in `.env`.
 
 ## First messages
 
+The web picks one by the user's `preferred_language` (English when unknown, e.g. a signed-out visitor).
+
+- en: "Hi, I'm NIVA from Navnagar Municipal Corporation. How can I help you today?" (default)
 - mr: "नमस्कार! मी निवा, नवनगर महानगरपालिकेची डिजिटल सहाय्यक. मी तुमची कशी मदत करू?"
 - hi: "नमस्ते! मैं निवा हूँ, नवनगर नगर निगम की डिजिटल सहायक। बताइए, मैं आपकी क्या मदद करूँ?"
-- en: "Hi, I'm NIVA from Navnagar Municipal Corporation. How can I help you today?"
 
 ## System prompt
 

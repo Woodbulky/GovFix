@@ -17,7 +17,7 @@ const stored = (() => {
 
 i18n.use(initReactI18next).init({
   resources: { en: { translation: en }, hi: { translation: hi }, mr: { translation: mr } },
-  lng: stored ?? 'mr',
+  lng: stored ?? 'en',
   fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });

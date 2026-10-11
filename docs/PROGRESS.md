@@ -31,6 +31,9 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 
 - 2026-10-11: Deploy on Vercel (web) + Render free tier (AI) + Supabase cloud. Docker and local Supabase dropped; engine tests run against the cloud project. LLM is Groq only (Gemini and Ollama dropped), keyword classifier as the fallback. sentence-transformers swapped for fastembed (same model, ONNX) to fit Render's 512 MB. City layout lives at `apps/web/src/features/city/layout/navnagar.json`.
 
+- 2026-10-11: **English is the default language** (Studio). NIVA agent default = English (Marathi, Hindi as additional languages); web first load = `en` when nothing is stored; `profiles.preferred_language` default and the sign-up trigger fallback = `en` (migration `20261011090400`). Demo users keep their own languages (Sunita mr, Ramesh hi, Aisha en), and NIVA starts each session in the user's language through the language override.
+- 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
+
 ## Entries
 
 ### Fix after P1 (2026-10-11 14:40)
