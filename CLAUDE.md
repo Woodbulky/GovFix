@@ -56,7 +56,7 @@ Citizens report civic issues (water, garbage, roads, streetlights, drainage, str
 
 - **apps/web**: React 18, Vite, TypeScript (strict), Tailwind CSS, shadcn/ui, react-router, @tanstack/react-query, zustand, react-i18next, @supabase/supabase-js v2, @elevenlabs/react, three + @react-three/fiber v8 + @react-three/drei v9 (the React 18 compatible set), @dnd-kit/core, browser-image-compression, lucide-react, @fontsource/anek-latin, @fontsource/anek-devanagari, @fontsource/mukta.
 - **supabase/**: Postgres with pgcrypto and pg_cron, Supabase Auth (email + password), Storage, Realtime. The workflow engine is SQL (plpgsql). Migrations live in `supabase/migrations`. **Cloud only** (project ref `xwojruafxtczmqwsasgk`, region ap-northeast-2). No Docker and no local Supabase.
-- **services/ai**: Python 3.11, FastAPI, uvicorn, pydantic v2, httpx, psycopg 3, fastembed (ONNX, no torch) with `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`. LLM: Groq only.
+- **services/ai**: Python 3.11, FastAPI, uvicorn, pydantic v2, httpx, psycopg 3, onnxruntime + sentencepiece (no torch) running the int8 ONNX export of `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`. LLM: Groq only.
 - **Tests**: Vitest (web, plus engine tests against the cloud project; they create their own data and finish with `reset_demo()`), pytest (AI service).
 - **Root**: npm workspaces.
 

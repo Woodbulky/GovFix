@@ -11,9 +11,9 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 | P4 Citizen | B | done | bfbaee2 | 2026-10-11 16:06 |
 | P5 Staff | A (built by B) | done | 32cfe5c | 2026-10-11 16:45 |
 | P6 AI service | C | done | e484a22 | 2026-10-11 |
-| P7 NIVA | C | built; tool registration + mic tests waiting on Studio | (this commit) | 2026-10-11 |
+| P7 NIVA | C | built; tool registration + mic tests waiting on Studio | ed38450 | 2026-10-11 |
 | P8a City geometry | D | done | 9dd92d4 | 2026-10-11 17:46 |
-| P8b City integration | D | done (migration applied, engine 45/45; live browser check pending) | merge commit | 2026-10-11 |
+| P8b City integration | D | done (migration applied, engine 45/45; live browser check pending) | 4f5dc05 | 2026-10-11 |
 | P9 Admin and proof tools | A (built by B) | done | 5b33015 | 2026-10-11 16:55 |
 | P10 Demo hardening | all | todo | | |
 
@@ -27,7 +27,8 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - [ ] Delete the blank line before `{{first_message}}` in the English (default) first message, then Publish
 - [x] `GROQ_API_KEY` (15 valid keys) and `GROQ_MODEL=openai/gpt-oss-120b` in `.env` (set in Render later; Lane C may pick another model in P6)
 - [ ] Vercel env: add `VITE_DEMO_PASSWORD` (same value as `DEMO_PASSWORD`) next to the other `VITE_*` values, or the demo role switcher stays hidden
-- [ ] Vercel project (root dir `apps/web`) and Render service (from `render.yaml`) connected to the GitHub repo
+- [ ] Vercel project (root dir `apps/web`) connected to the GitHub repo; then add its URL to Render `ALLOWED_ORIGINS` and Supabase Auth Site URL + Redirect URLs
+- [x] Render web service `govfix-ai` created by hand (not the blueprint): root dir `services/ai`, build/start commands and env vars as in `render.yaml`, health check `/health`
 - [ ] Seed photos in `supabase/seed/photos/` (own photos; no faces or number plates)
 
 ## Decisions
@@ -36,6 +37,8 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 
 - 2026-10-11: **English is the default language** (Studio). NIVA agent default = English (Marathi, Hindi as additional languages); web first load = `en` when nothing is stored; `profiles.preferred_language` default and the sign-up trigger fallback = `en` (migration `20261011090400`). Demo users keep their own languages (Sunita mr, Ramesh hi, Aisha en), and NIVA starts each session in the user's language through the language override.
 - 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
+
+- 2026-10-11: Duplicate model on Render ran out of memory (fastembed ~600 MB; its HF tokenizer alone ~250 MB vs the free plan's 512 MB). Swapped to the same model's int8 ONNX export (`Xenova/paraphrase-multilingual-MiniLM-L12-v2`) run by onnxruntime with the model's own sentencepiece tokenizer: ~280 MB at startup, vectors identical to fastembed's (cosine 1.0). fastembed dropped (commit ad29908).
 
 ## Entries
 

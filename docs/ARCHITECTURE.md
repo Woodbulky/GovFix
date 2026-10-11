@@ -15,7 +15,7 @@
 │  RLS, audit chain, pg_cron sweep  │◄┤  /suggest  /draft-reply    │ │ (STT+LLM+TTS)  │
 │ Auth (email+password)             │ │  /tts  /niva/session       │ │ TTS for voice  │
 │ Storage (photos, voice notes)     │ │  /health                   │ │ notes          │
-│ Realtime                          │ │ Groq → keyword; fastembed  │ └────────────────┘
+│ Realtime                          │ │ Groq → keyword; int8 ONNX  │ └────────────────┘
 └───────────────────────────────────┘ │ embeddings (local, CPU)    │
                                       │ DB: ai_writer via pooler   │
                                       └────────────────────────────┘

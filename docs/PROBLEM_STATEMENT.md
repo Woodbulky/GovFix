@@ -22,7 +22,7 @@ Track chosen: **municipal grievance resolution** (one track, end to end; a gener
 | Meaningful AI (classification, extraction, matching, adaptation; not just rewriting) | Multilingual categorisation (Marathi/Hindi/English, code-mixed), field extraction, multilingual-embedding duplicate detection, optional photo categorisation, voice intake through NIVA |
 | Consequential decisions follow explicit, checkable rules; AI never silently overrides | The workflow table decides transitions and SQL decides deadlines. AI only suggests, and every acceptance is a logged human action |
 | Fictional data only | Fictional city Navnagar, fictional people, `@navnagar.test` accounts, own or placeholder photos without faces or plates |
-| No paid infra required; core demo must not depend on external AI; local fallback | Free tiers only (Vercel, Render, Supabase). Keyword classifier and on-server embeddings (fastembed) need no external AI; typed flow if NIVA is down; 2D map if WebGL fails. An AI offline toggle proves it live |
+| No paid infra required; core demo must not depend on external AI; local fallback | Free tiers only (Vercel, Render, Supabase). Keyword classifier and on-server embeddings (onnxruntime + sentencepiece (int8)) need no external AI; typed flow if NIVA is down; 2D map if WebGL fails. An AI offline toggle proves it live |
 
 ## Phrases to use when pitching
 
