@@ -514,6 +514,9 @@ isOneToOne: false
 "transition_request":
 { Args: { "p_action": string,"p_ai_suggestion_id"?: string,"p_channel"?: Database["public"]['Enums']["channel"],"p_expected_state": Database["public"]['Enums']["request_state"],"p_payload"?: Json,"p_request_id": string }; Returns: Json
                            },
+"update_my_profile":
+{ Args: { "p_language"?: string,"p_large_text"?: boolean,"p_phone"?: string }; Returns: Json
+                           },
 "update_sla_policy":
 { Args: { "p_category_code": string,"p_hours": number,"p_note"?: string }; Returns: Json
                            },

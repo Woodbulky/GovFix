@@ -1,7 +1,9 @@
 import { Leaf } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Toaster } from '@/components/Toaster';
 import { useAuth } from '@/features/auth/store';
+import { useNotifications } from '@/features/citizen/hooks';
 import { useDemoMode } from '@/lib/queries';
 import { cn } from '@/lib/utils';
 import { navFor } from '../routes';
@@ -43,11 +45,24 @@ function Nav({ dark, vertical }: { dark: boolean; vertical: boolean }) {
             >
               <Icon aria-hidden size={18} />
               {t(`nav.${key}`)}
+              {key === 'notifications' && <UnreadCount />}
             </NavLink>
           </li>
         ))}
       </ul>
     </nav>
+  );
+}
+
+function UnreadCount() {
+  const { t } = useTranslation();
+  const n = useNotifications().data?.filter((x) => !x.read_at).length;
+  if (!n) return null;
+  return (
+    <span className="tabular ml-auto rounded-full bg-marigold px-2 text-sm font-semibold text-canopy">
+      {n}
+      <span className="sr-only"> {t('notifications.unread')}</span>
+    </span>
   );
 }
 
@@ -111,5 +126,10 @@ function StaffLayout() {
 /** Layout follows the signed-in role, so shared pages (Explore, Track) keep the user's chrome. */
 export function AppShell() {
   const role = useAuth((s) => s.profile?.role);
-  return role && role !== 'citizen' ? <StaffLayout /> : <TopBarLayout />;
+  return (
+    <>
+      {role && role !== 'citizen' ? <StaffLayout /> : <TopBarLayout />}
+      <Toaster />
+    </>
+  );
 }

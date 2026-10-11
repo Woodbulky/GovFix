@@ -1,0 +1,232 @@
+import { Volume2 } from 'lucide-react';
+import { type ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useSearchParams } from 'react-router-dom';
+import { CategoryIcon } from '@/components/CategoryIcon';
+import { toast, useRefusalToast } from '@/components/Toaster';
+import { useAuth } from '@/features/auth/store';
+import { requestSuggestions } from '@/lib/ai';
+import { useAppSettings } from '@/lib/queries';
+import { nameOf, useCategories } from '@/lib/reference';
+import { rpc, type RpcResult } from '@/lib/rpc';
+import { supabase } from '@/lib/supabase';
+import { cn } from '@/lib/utils';
+import { speak } from '@/lib/voice';
+import { LocationStep, NO_PLACE, type Place, usePlaceLabel } from './LocationStep';
+import { PhotoStep } from './PhotoStep';
+
+const STEPS = ['issue', 'location', 'photos', 'review'] as const;
+const NOT_SURE = '';
+const btn = 'inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md px-5 font-semibold';
+
+type Created = RpcResult<{ request: { id: string; ticket_no: string } }>;
+
+export function ReportPage() {
+  const { t, i18n } = useTranslation();
+  const [params] = useSearchParams();
+  const uid = useAuth((s) => s.profile?.id);
+  const { data: cats } = useCategories();
+  const refused = useRefusalToast();
+  const [step, setStep] = useState(0);
+  const [category, setCategory] = useState(params.get('category') ?? NOT_SURE);
+  const [description, setDescription] = useState('');
+  const [place, setPlace] = useState<Place>(NO_PLACE);
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState<{ id: string; ticket: string } | null>(null);
+  const placeLabel = usePlaceLabel(place);
+
+  if (done) return <Success {...done} />;
+
+  const submit = async () => {
+    setBusy(true);
+    try {
+      const res = (await rpc('create_request', {
+        p: {
+          description,
+          ward_id: place.ward_id,
+          landmark_id: place.landmark_id,
+          loc_x: place.x,
+          loc_z: place.z,
+          category_hint: category || null,
+          language: i18n.language,
+        },
+      })) as Created;
+      if (!res.ok) {
+        refused(res);
+        // Send the citizen back to the step that needs fixing.
+        if (res.code.endsWith('description') || res.code.endsWith('category_hint')) setStep(0);
+        else if (/ward_id|landmark_id|location/.test(res.code)) setStep(1);
+        return;
+      }
+      const { id, ticket_no } = res.request;
+      let failed = 0;
+      for (const file of photos) {
+        const path = `${uid}/${crypto.randomUUID()}.jpg`;
+        const up = await supabase.storage.from('complaint-photos').upload(path, file, { contentType: 'image/jpeg' });
+        const att = up.error
+          ? null
+          : ((await rpc('attach_photo', { p_request_id: id, p_storage_path: path, p_kind: 'report' })) as RpcResult);
+        if (!att?.ok) failed++;
+      }
+      if (failed) toast(t('report.photoFailed', { n: failed }), 'refused');
+      requestSuggestions(id);
+      setDone({ id, ticket: ticket_no });
+    } catch {
+      toast(t('errors.network'), 'refused');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const catName = (code: string) => {
+    const c = cats?.find((x) => x.code === code);
+    return c ? nameOf(c, i18n.language) : t('report.notSure');
+  };
+
+  return (
+    <section className="mx-auto max-w-[640px] space-y-6">
+      <h1 className="text-2xl">{t('nav.report')}</h1>
+      {params.get('mode') === 'talk' && (
+        <p className="rounded-md bg-surface p-3 text-ink-muted">{t('report.nivaSoon')}</p>
+      )}
+      <ol className="flex gap-2" aria-label={t('report.progress')}>
+        {STEPS.map((s, i) => (
+          <li
+            key={s}
+            aria-current={i === step ? 'step' : undefined}
+            className={cn('flex-1 border-t-4 pt-1 text-sm', i <= step ? 'border-nmc font-semibold' : 'border-line')}
+          >
+            {i + 1}. {t(`report.step.${s}`)}
+          </li>
+        ))}
+      </ol>
+
+      {step === 0 && (
+        <div className="space-y-4">
+          <fieldset>
+            <legend className="font-medium">{t('report.whatKind')}</legend>
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {[...(cats ?? []).map((c) => [c.code, c.icon] as const), [NOT_SURE, 'circle-help'] as const].map(
+                ([code, icon]) => (
+                  <label
+                    key={code || 'not-sure'}
+                    className={cn(
+                      'flex min-h-[56px] cursor-pointer items-center gap-2 rounded-md border bg-surface p-3 focus-within:outline focus-within:outline-2',
+                      category === code ? 'border-nmc ring-2 ring-nmc' : 'border-line',
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="category"
+                      value={code}
+                      checked={category === code}
+                      onChange={() => setCategory(code)}
+                      className="sr-only"
+                    />
+                    <CategoryIcon name={icon} size={22} className="shrink-0 text-nmc" />
+                    {catName(code)}
+                  </label>
+                ),
+              )}
+            </div>
+          </fieldset>
+          <label className="block">
+            <span className="font-medium">{t('report.describe')}</span>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={5}
+              maxLength={4000}
+              placeholder={t('report.describeHint')}
+              className="mt-1 block w-full rounded-md border border-line bg-surface p-3"
+            />
+          </label>
+        </div>
+      )}
+      {step === 1 && <LocationStep place={place} onChange={setPlace} />}
+      {step === 2 && <PhotoStep photos={photos} onChange={setPhotos} />}
+      {step === 3 && (
+        <dl className="space-y-3 rounded-lg bg-surface p-4">
+          <Row label={t('report.step.issue')} onEdit={() => setStep(0)}>
+            <strong>{catName(category)}</strong>
+            <p className="whitespace-pre-line">{description || '—'}</p>
+          </Row>
+          <Row label={t('report.step.location')} onEdit={() => setStep(1)}>
+            {placeLabel || '—'}
+          </Row>
+          <Row label={t('report.step.photos')} onEdit={() => setStep(2)}>
+            {t('report.photoCount', { count: photos.length })}
+          </Row>
+        </dl>
+      )}
+
+      <div className="flex justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => setStep(step - 1)}
+          className={cn(btn, 'border border-line bg-surface', step === 0 && 'invisible')}
+        >
+          {t('report.back')}
+        </button>
+        {step < 3 ? (
+          <button type="button" onClick={() => setStep(step + 1)} className={cn(btn, 'bg-nmc text-white')}>
+            {t('report.next')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void submit()}
+            className={cn(btn, 'bg-nmc text-white disabled:opacity-60')}
+          >
+            {busy ? t('report.submitting') : t('report.submit')}
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function Row({ label, onEdit, children }: { label: string; onEdit: () => void; children: ReactNode }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex gap-3 border-b border-line pb-3 last:border-0 last:pb-0">
+      <div className="flex-1">
+        <dt className="text-sm text-ink-muted">{label}</dt>
+        <dd>{children}</dd>
+      </div>
+      <button type="button" onClick={onEdit} className="min-h-[44px] px-2 font-medium text-nmc underline">
+        {t('report.edit')}
+      </button>
+    </div>
+  );
+}
+
+function Success({ id, ticket }: { id: string; ticket: string }) {
+  const { t, i18n } = useTranslation();
+  const hours = useAppSettings().data?.triage_hours ?? 4;
+  const message = t('report.successBody', { n: hours });
+  return (
+    <section className="mx-auto max-w-[640px] space-y-5 rounded-lg bg-surface p-6 text-center shadow-sm">
+      <p className="text-ink-muted">{t('report.successTitle')}</p>
+      <p className="tabular font-heading text-4xl font-bold text-nmc">{ticket}</p>
+      <p>{message}</p>
+      <button
+        type="button"
+        onClick={() => speak(`${t('report.successTitle')} ${ticket.split('').join(' ')}. ${message}`, i18n.language)}
+        className={cn(btn, 'border border-line')}
+      >
+        <Volume2 aria-hidden size={20} /> {t('listen')}
+      </button>
+      <div className="flex flex-wrap justify-center gap-3">
+        <Link to={`/me/complaints/${id}`} className={cn(btn, 'bg-nmc text-white')}>
+          {t('report.trackIt')}
+        </Link>
+        <Link to="/me/complaints" className={cn(btn, 'border border-line')}>
+          {t('nav.myComplaints')}
+        </Link>
+      </div>
+    </section>
+  );
+}

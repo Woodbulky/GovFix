@@ -6,9 +6,10 @@ import { simNow } from './time';
 /** Use on every requests query so SlaBadge gets the SQL-computed status. */
 export const REQUEST_SELECT = '*,sla_status_of,sla_ratio';
 
-export function must<T>({ data, error }: { data: T; error: { message: string } | null }): T {
-  if (error) throw new Error(error.message);
-  return data;
+/** Unwraps a supabase-js result: throws on error. Use `.maybeSingle()` without it when a row may be missing. */
+export function must<R extends { data: unknown; error: { message: string } | null }>(res: R) {
+  if (res.error) throw new Error(res.error.message);
+  return res.data as NonNullable<R['data']>;
 }
 
 // app_settings isn't in the realtime publication; the Time Machine invalidates ['app_settings'] after a jump.

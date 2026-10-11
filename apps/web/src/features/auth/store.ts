@@ -1,10 +1,14 @@
 import type { Session } from '@supabase/supabase-js';
 import { create } from 'zustand';
+import { applyLargeText } from '@/app/layouts/HeaderControls';
 import i18n from '@/i18n';
 import type { Tables } from '@/lib/database.types';
 import { supabase } from '@/lib/supabase';
 
-export type Profile = Pick<Tables<'profiles'>, 'id' | 'full_name' | 'role' | 'department_code' | 'preferred_language'>;
+export type Profile = Pick<
+  Tables<'profiles'>,
+  'id' | 'full_name' | 'role' | 'department_code' | 'preferred_language' | 'large_text'
+>;
 export type Role = Profile['role'];
 
 type AuthState = { ready: boolean; session: Session | null; profile: Profile | null };
@@ -17,7 +21,7 @@ async function load(session: Session | null) {
     ? (
         await supabase
           .from('profiles')
-          .select('id, full_name, role, department_code, preferred_language')
+          .select('id, full_name, role, department_code, preferred_language, large_text')
           .eq('id', session.user.id)
           .single()
       ).data
@@ -37,7 +41,10 @@ export async function signIn(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return null;
   const profile = await load(data.session);
-  if (profile) await i18n.changeLanguage(profile.preferred_language);
+  if (profile) {
+    await i18n.changeLanguage(profile.preferred_language);
+    applyLargeText(profile.large_text);
+  }
   return profile;
 }
 

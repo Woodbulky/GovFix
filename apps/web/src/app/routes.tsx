@@ -25,7 +25,15 @@ import type { ReactNode } from 'react';
 import { LoginPage } from '@/features/auth/LoginPage';
 import type { Role } from '@/features/auth/store';
 import type { Access } from './access';
-import { PublicHome, Soon } from './pages';
+import { ComplaintDetail } from '@/features/citizen/ComplaintDetail';
+import { CitizenHome, MyComplaints } from '@/features/citizen/MyComplaints';
+import { NotificationsPage } from '@/features/citizen/NotificationsPage';
+import { ProfilePage } from '@/features/citizen/ProfilePage';
+import { DepartmentsPage } from '@/features/public/Departments';
+import { PublicHome } from '@/features/public/PublicHome';
+import { TrackPage } from '@/features/public/TrackPage';
+import { ReportPage } from '@/features/report/ReportPage';
+import { Soon } from './pages';
 
 export type AppRoute = {
   path: string;
@@ -41,33 +49,33 @@ export type AppRoute = {
 const STAFF: Role[] = ['officer', 'dept_head', 'manager', 'commissioner'];
 const soon = (key: string, phase: string) => <Soon titleKey={`nav.${key}`} phase={phase} />;
 
-// ponytail: placeholder screens; P4 (citizen), P5 (staff), P8 (city) and P9 (admin) swap in the real elements.
+// ponytail: placeholder screens; P5 (staff), P8 (city) and P9 (admin) swap in the real elements.
 export const ROUTES: AppRoute[] = [
   // Public, also reachable when signed in
   { path: '/', key: 'home', icon: House, access: 'anyone', element: <PublicHome /> },
   { path: '/explore', key: 'explore', icon: MapIcon, access: 'anyone', element: soon('explore', 'P8') },
-  { path: '/track', key: 'track', icon: Search, access: 'anyone', element: soon('track', 'P4') },
-  { path: '/departments', key: 'departments', icon: Building2, access: 'anyone', element: soon('departments', 'P4') },
+  { path: '/track', key: 'track', icon: Search, access: 'anyone', element: <TrackPage /> },
+  { path: '/departments', key: 'departments', icon: Building2, access: 'anyone', element: <DepartmentsPage /> },
   { path: '/login', key: 'login', icon: User, access: 'anyone', element: <LoginPage /> },
   // Citizen
-  { path: '/me', key: 'citizenHome', icon: House, access: ['citizen'], element: soon('citizenHome', 'P4') },
-  { path: '/report', key: 'report', icon: FilePlus, access: ['citizen'], element: soon('report', 'P4') },
+  { path: '/me', key: 'citizenHome', icon: House, access: ['citizen'], element: <CitizenHome /> },
+  { path: '/report', key: 'report', icon: FilePlus, access: ['citizen'], element: <ReportPage /> },
   {
     path: '/me/complaints',
     key: 'myComplaints',
     icon: Inbox,
     access: ['citizen'],
-    element: soon('myComplaints', 'P4'),
+    element: <MyComplaints />,
   },
-  { path: '/me/complaints/:id', key: 'complaint', icon: Inbox, access: ['citizen'], element: soon('complaint', 'P4') },
+  { path: '/me/complaints/:id', key: 'complaint', icon: Inbox, access: ['citizen'], element: <ComplaintDetail /> },
   {
     path: '/notifications',
     key: 'notifications',
     icon: Bell,
     access: ['citizen', 'officer'],
-    element: soon('notifications', 'P4'),
+    element: <NotificationsPage />,
   },
-  { path: '/profile', key: 'profile', icon: User, access: ['citizen'], element: soon('profile', 'P4') },
+  { path: '/profile', key: 'profile', icon: User, access: ['citizen'], element: <ProfilePage /> },
   // Staff
   { path: '/requests/:id', key: 'request', icon: Inbox, access: STAFF, element: soon('request', 'P5') },
   { path: '/officer', key: 'myWork', icon: ListChecks, access: ['officer'], element: soon('myWork', 'P5') },

@@ -116,5 +116,179 @@
     "keyword": "Keywords",
     "vision": "Photo AI",
     "human": "Human"
+  },
+  "close": "Close",
+  "listen": "Listen",
+  "errors": {
+    "network": "Couldn't reach the server. Check your connection and try again."
+  },
+  "home": {
+    "categories": "What can you report?"
+  },
+  "how": {
+    "title": "How it works",
+    "report": "Report it by voice or by typing",
+    "review": "Reviewed within {{n}} hours",
+    "reviewPlain": "Reviewed by the Grievance Cell",
+    "fix": "Fixed by the department",
+    "confirm": "You confirm it's fixed"
+  },
+  "departments": {
+    "intro": "Each department handles these problems, with a deadline set by the corporation.",
+    "hours": "{{n}} h",
+    "other": "{{name}}: the Grievance Cell picks the right department ({{n}} h)."
+  },
+  "track": {
+    "ticket": "Ticket number",
+    "last4": "Last 4 digits of your phone",
+    "submit": "Track",
+    "none": "No complaint matches that ticket number and phone. Check both and try again.",
+    "category": "Problem",
+    "department": "Department",
+    "officer": "Officer",
+    "deadline": "Deadline",
+    "notYet": "Not yet assigned"
+  },
+  "stepper": {
+    "label": "Progress"
+  },
+  "event": {
+    "create_request": "Complaint submitted",
+    "triage": "Sent to {{dept}}",
+    "reject": "Closed without action",
+    "merge_duplicate": "Joined with an existing complaint about the same problem",
+    "reroute": "Sent back for review",
+    "assign": "Assigned to an officer",
+    "reassign": "Assigned to another officer",
+    "start": "Work started",
+    "request_info": "The officer needs more information",
+    "provide_info": "You replied",
+    "resolve": "Marked resolved",
+    "confirm": "You confirmed the fix",
+    "reopen": "Reopened",
+    "auto_close": "Closed after no reply"
+  },
+  "message": {
+    "info_question": "Question from the officer",
+    "info_reply": "Your reply",
+    "citizen_update": "Update from the department"
+  },
+  "place": {
+    "ward": "Ward {{n}} {{name}}",
+    "near": "Near {{landmark}}, {{ward}}",
+    "outside": "That spot is outside Navnagar. Pick a point inside the city."
+  },
+  "map": {
+    "label": "Map of Navnagar"
+  },
+  "report": {
+    "progress": "Report steps",
+    "step": {
+      "issue": "Issue",
+      "location": "Location",
+      "photos": "Photos",
+      "review": "Review"
+    },
+    "whatKind": "What kind of problem is it?",
+    "notSure": "Not sure",
+    "describe": "Describe the problem",
+    "describeHint": "What is happening, and since when?",
+    "mapHint": "Tap the spot on the map, or choose the ward and a nearby landmark.",
+    "ward": "Ward",
+    "landmark": "Nearby landmark",
+    "chooseWard": "Choose a ward",
+    "chooseLandmark": "Choose a landmark (optional)",
+    "photoHint": "Add up to {{n}} photos. They help the officer find and fix it faster.",
+    "addPhoto": "Add photo",
+    "preparing": "Preparing…",
+    "photoN": "Photo {{n}}",
+    "removePhoto": "Remove photo {{n}}",
+    "photoPrivacy": "Photos are resized and their location data is removed before upload. Avoid faces and number plates.",
+    "photoCount_one": "{{count}} photo",
+    "photoCount_other": "{{count}} photos",
+    "back": "Back",
+    "next": "Next",
+    "edit": "Change",
+    "submit": "Submit complaint",
+    "submitting": "Submitting…",
+    "photoFailed_one": "{{count}} photo couldn't be added. Your complaint is filed.",
+    "photoFailed_other": "{{count}} photos couldn't be added. Your complaint is filed.",
+    "successTitle": "Complaint registered",
+    "successBody": "We'll review it within {{n}} hours.",
+    "trackIt": "Track this complaint",
+    "nivaSoon": "Talking to NIVA is coming soon. For now, please type your complaint here."
+  },
+  "citizen": {
+    "greeting": "Namaskar, {{name}}",
+    "open": "Your open complaints",
+    "noneOpen": "You have no open complaints."
+  },
+  "card": {
+    "officer": "Officer {{name}}",
+    "updated": "Updated {{when}}",
+    "listen": "Listen to the status of {{ticket}}"
+  },
+  "mine": {
+    "filter": "Show",
+    "empty": "Nothing here yet.",
+    "tab": {
+      "all": "All",
+      "reply": "Needs your reply",
+      "open": "Open",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    }
+  },
+  "detail": {
+    "notFound": "This complaint doesn't exist or isn't yours.",
+    "yourReport": "What you reported",
+    "photos": "Photos",
+    "yourPhoto": "Your photo {{n}}",
+    "proofPhoto": "Officer's proof photo {{n}}",
+    "yourCaption": "Your photo",
+    "proofCaption": "After the fix",
+    "history": "History",
+    "needsInfo": "The officer needs more information",
+    "yourReply": "Your reply",
+    "sendReply": "Send reply",
+    "replySent": "Reply sent",
+    "isItFixed": "Is the problem fixed?",
+    "yesFixed": "Yes, it's fixed",
+    "stillProblem": "Still a problem",
+    "whatsWrong": "What's still wrong?",
+    "reopen": "Reopen complaint",
+    "confirmed": "Thank you. The complaint is closed.",
+    "reopened": "Reopened. The department will look at it again."
+  },
+  "notifications": {
+    "empty": "No notifications yet.",
+    "markAll_one": "Mark {{count}} as read",
+    "markAll_other": "Mark all {{count}} as read",
+    "unread": "Unread",
+    "listen": "Listen: {{title}}"
+  },
+  "profile": {
+    "language": "Language",
+    "languageHint": "Used for this app, NIVA and your updates.",
+    "phone": "Phone",
+    "phoneHint": "Used with your ticket number to track a complaint.",
+    "save": "Save",
+    "saved": "Profile saved"
+  },
+  "refusal": {
+    "MISSING_FIELD_description": "Please describe the problem in a few words.",
+    "INVALID_FIELD_description": "Please keep the description under 4000 characters.",
+    "MISSING_FIELD_ward_id": "Please pick the ward or the spot on the map.",
+    "INVALID_FIELD_landmark_id": "That landmark isn't in the chosen ward.",
+    "INVALID_FIELD_category_hint": "Pick a type of problem from the list, or \"Not sure\".",
+    "INVALID_FIELD_location": "The map location is incomplete. Please pick the spot again.",
+    "MISSING_FIELD_reply": "Please write your reply first.",
+    "MISSING_FIELD_reason": "Please say what's still wrong.",
+    "STALE_STATE": "This complaint has changed since you opened it. The page now shows the latest.",
+    "INVALID_TRANSITION": "That step isn't possible at this stage.",
+    "GUARD_FAILED_within_reopen_window": "This was resolved more than 7 days ago. Please file a new complaint.",
+    "LIMIT_REACHED": "A complaint can have up to 3 photos.",
+    "INVALID_FIELD_phone": "Use digits only, for example +91 00000 14207.",
+    "ROLE_NOT_PERMITTED": "Your role can't do this."
   }
 }
