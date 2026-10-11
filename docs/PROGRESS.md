@@ -6,8 +6,8 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 |---|---|---|---|---|
 | P0 Scaffold | A | done | 55b374d | 2026-10-11 14:00 |
 | P1 Database and seed | A | done | 1c7116d | 2026-10-11 14:15 |
-| P2 Workflow engine | A | done | (this commit) | 2026-10-11 15:30 |
-| P3 Auth and shell | B | todo | | |
+| P2 Workflow engine | A | done | ec06710 | 2026-10-11 15:30 |
+| P3 Auth and shell | B | done | (this commit) | 2026-10-11 15:43 |
 | P4 Citizen | B | todo | | |
 | P5 Staff | A | todo | | |
 | P6 AI service | C | todo | | |
@@ -25,6 +25,7 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - [x] ElevenLabs agent NIVA created per docs/NIVA.md (English default + Marathi + Hindi, Hinglish Mode, Sarah voice, prompt, 5 vars, Language override, authentication on); voice IDs in `.env`; Marathi TTS tested. Client tools are registered in P7
 - [ ] Delete the blank line before `{{first_message}}` in the English (default) first message, then Publish
 - [x] `GROQ_API_KEY` (15 valid keys) and `GROQ_MODEL=openai/gpt-oss-120b` in `.env` (set in Render later; Lane C may pick another model in P6)
+- [ ] Vercel env: add `VITE_DEMO_PASSWORD` (same value as `DEMO_PASSWORD`) next to the other `VITE_*` values, or the demo role switcher stays hidden
 - [ ] Vercel project (root dir `apps/web`) and Render service (from `render.yaml`) connected to the GitHub repo
 - [ ] Seed photos in `supabase/seed/photos/` (own photos; no faces or number plates)
 
@@ -36,6 +37,17 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
 
 ## Entries
+
+### P3 Auth and shell (done 2026-10-11 15:43)
+- Built: react-router shell driven by one route table (`app/routes.tsx`: path, access, demo flag, element) plus per-role nav lists in PRD order (`NAV`); `app/access.ts` (`HOME` per role, `canAccess`). Layout follows the signed-in role: top bar for public/citizen, 240 px canopy sidebar for staff (strip under the header below `md`). `Guard` sends anon to `/login` (returns to the pasted URL after sign-in) and shows "Not available for your role" for other roles' pages and for demo-only pages when demo mode is off. Header: language switch, large text (remembered locally), NIVA button (link to `/report?mode=talk`; inert for staff until P7), Sim time badge (only when `sim_offset_seconds` ≠ 0), user name/role, sign out. Login page; `features/auth/store.ts` (zustand session + profile, `signIn` switches the UI to `preferred_language`). Demo role switcher really signs in as the seeded user. `lib/rpc.ts` (typed generic `rpc()` over every client-callable function + `transition()`; refusals come back as `{ok:false, code, message, audit_id}`), `lib/queries.ts` (`REQUEST_SELECT`, `useAppSettings` polled every 30 s, `useDemoMode`, `useSimNow`), `lib/realtime.ts` (`useRealtime(table, queryKey)`), `lib/time.ts`. Shared `StatusChip`, `SlaBadge`, `EscalationBadge`, `ProviderBadge` (icon + text, en/hi/mr). Placeholder pages for every P4/P5/P8/P9 screen. Tests: route access per role and badge wording/sim-time countdown (6). Clicked through in the browser as all 18 demo users: right home, only their tabs, foreign URLs refused (also on a full page load), sign-out → login, bad password message.
+- Deviations (why):
+  - New env var `VITE_DEMO_PASSWORD` (= `DEMO_PASSWORD`): the switcher must really sign in so the JWT changes, and the browser only sees `VITE_*`. It ships in the bundle, which is acceptable only because the accounts are fictional demo users; the switcher renders only when `VITE_DEMO_MODE=true` and `app_settings.demo_mode` is on.
+  - Shared paths instead of per-role copies: `/escalations` (Dept Head and Commissioner), `/requests` (Manager and Commissioner), `/requests/:id` (all staff). RLS scopes what each sees.
+  - Signed-in users opening `/` go to their role home; public pages (Explore, Track, Departments) stay reachable in the user's own layout.
+  - TRIAGED reads "Sent to department" for everyone (clearer for citizens than "Triaged"). The P0 token page was removed.
+  - Large text is stored in localStorage, not `profiles.large_text` (no `update_my_profile()` RPC yet; P4 Profile can add it).
+- Known issues: `app_settings` isn't in the realtime publication, so the Sim time badge lags up to 30 s after a jump; the P9 Time Machine should invalidate `['app_settings']`. Staff `SlaBadge` for SUBMITTED shows "Under review"; the Manager's 4h triage countdown (P5) needs `triage_due_at` passed in. Bundle > 500 kB warning (code-split when the city lands).
+- Manual steps for Studio: add `VITE_DEMO_PASSWORD` in Vercel (see checklist). Locally it's already in `.env`.
 
 ### P2 Workflow engine (done 2026-10-11 15:30)
 - Built: 7 migrations. `engine_base` (`now_sim`, `append_audit` + `audit_hash` with advisory lock 4242, `_refusal`/`_deny` helpers, `notify` with en/hi/mr citizen templates, `sla_ratio`/`sla_status_of` as PostgREST computed fields + `sla_status(id)`), `engine_transition` (`transition_request` over `workflow_transitions` with a guard registry and an effect registry, in the WORKFLOW.md check order; `create_request`, `attach_photo`), `engine_sweep_admin` (`run_escalation_sweep` + pg_cron job `govfix-escalation-sweep` every minute, `time_machine_advance`, `set_ai_offline`, `verify_audit_chain`, `tamper_demo`, `decide_suggestion`, `send_citizen_update`, `add_staff_note`, `update_sla_policy`, `mark_read`), `engine_public` (`public_markers`, `track_request`, `my_request_timeline`, `resolve_landmark`, `locate_point`), `reset_demo` + 25-request scenario, plus two fix migrations. `npm run demo:reset` (`scripts/demo-reset.ts`). Types regenerated. Tests: `tests/engine/workflow.test.ts` + `time-audit.test.ts` cover all 20 WORKFLOW.md tests; with `rls.test.ts` that's 45/45 passing against the cloud project.

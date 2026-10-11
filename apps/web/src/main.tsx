@@ -9,11 +9,12 @@ import './index.css';
 import './i18n';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { TokensPage } from './app/TokensPage';
+import { App } from './app/App';
+import { applyLargeText } from './app/layouts/HeaderControls';
 
-// ponytail: single page until P3 adds the router and layouts.
+applyLargeText();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <TokensPage />
+    <App />
   </StrictMode>,
 );

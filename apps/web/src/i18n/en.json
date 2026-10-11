@@ -1,11 +1,120 @@
 {
-  "app": { "name": "GovFix", "org": "Navnagar Municipal Corporation" },
-  "lang": { "en": "EN", "hi": "हिंदी", "mr": "मराठी", "label": "Language" },
+  "app": {
+    "name": "GovFix",
+    "org": "Navnagar Municipal Corporation"
+  },
+  "lang": {
+    "en": "EN",
+    "hi": "हिंदी",
+    "mr": "मराठी",
+    "label": "Language"
+  },
   "largeText": "Large text",
   "hero": {
     "title": "Report a problem in your ward",
     "body": "Tell NIVA in your own language, or type it. We review every complaint within 4 hours."
   },
-  "actions": { "talk": "Talk to NIVA", "type": "Report by typing" },
-  "tokens": { "status": "Status colours", "sla": "Deadline colours", "type": "Type scale" }
+  "actions": {
+    "talk": "Talk to NIVA",
+    "type": "Report by typing"
+  },
+  "skip": "Skip to content",
+  "nav": {
+    "label": "Main",
+    "home": "Home",
+    "explore": "Explore Navnagar",
+    "track": "Track a complaint",
+    "departments": "Departments",
+    "login": "Sign in",
+    "citizenHome": "Home",
+    "report": "Report an issue",
+    "myComplaints": "My complaints",
+    "complaint": "Complaint",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "myWork": "My work",
+    "request": "Request",
+    "board": "Department board",
+    "toAssign": "To assign",
+    "officers": "Officers",
+    "escalations": "Escalations",
+    "triage": "Triage queue",
+    "duplicates": "Duplicates",
+    "allRequests": "All requests",
+    "overview": "Overview",
+    "audit": "Audit log",
+    "workflow": "Workflow & SLA",
+    "timeMachine": "Time Machine",
+    "apiConsole": "API Console",
+    "users": "Users"
+  },
+  "role": {
+    "citizen": "Citizen",
+    "officer": "Field officer",
+    "dept_head": "Department head",
+    "manager": "Grievance Cell manager",
+    "commissioner": "Commissioner"
+  },
+  "auth": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "failed": "Email or password didn't match. Check both and try again."
+  },
+  "demo": {
+    "switch": "Demo user",
+    "pick": "Choose a demo user"
+  },
+  "simTime": "Sim time · {{when}}",
+  "niva": {
+    "soon": "NIVA for staff arrives with the voice assistant phase"
+  },
+  "soon": "This screen is being built (phase {{phase}}).",
+  "notAvailable": {
+    "title": "Not available for your role",
+    "body": "This page belongs to a different role. Your own pages are in the menu.",
+    "home": "Go to my home"
+  },
+  "state": {
+    "SUBMITTED": "Submitted",
+    "TRIAGED": "Sent to department",
+    "ASSIGNED": "Assigned",
+    "IN_PROGRESS": "In progress",
+    "NEEDS_INFO": "Needs info",
+    "RESOLVED": "Resolved",
+    "REOPENED": "Reopened",
+    "CLOSED": "Closed",
+    "REJECTED": "Rejected"
+  },
+  "sla": {
+    "untriaged": "Under review",
+    "on_track": "On track",
+    "at_risk": "At risk",
+    "breached": "Past deadline",
+    "done": "Done",
+    "due": "Due {{when}}",
+    "dueIn": "Due in {{dur}}",
+    "pastBy": "Past deadline by {{dur}}",
+    "paused_citizen": "Paused, waiting for you",
+    "paused_staff": "Paused, waiting for citizen"
+  },
+  "dur": {
+    "d": "{{n}}d",
+    "h": "{{n}}h",
+    "m": "{{n}}m"
+  },
+  "esc": {
+    "deptHead": "Escalated to Dept Head",
+    "commissioner": "Escalated to Commissioner"
+  },
+  "provider": {
+    "llm": "AI (cloud)",
+    "local": "AI (local)",
+    "keyword": "Keywords",
+    "vision": "Photo AI",
+    "human": "Human"
+  }
 }
