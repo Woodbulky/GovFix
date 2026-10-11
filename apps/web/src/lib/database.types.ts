@@ -85,6 +85,20 @@ isOneToOne: false
       referencedColumns: ["code"]
     }
                   ]
+                },"city_water": {
+                  Row: {
+                    "decks": NonNullable<Json>,"id": number,"river": NonNullable<Json>,"river_width": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "decks"?: NonNullable<Json>,"id"?: number,"river": NonNullable<Json>,"river_width": number
+                  }
+                  Update: {
+                    "decks"?: NonNullable<Json>,"id"?: number,"river"?: NonNullable<Json>,"river_width"?: number
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"departments": {
                   Row: {
                     "code": string,"head_id": string | null,"name_en": string,"name_hi": string,"name_mr": string
@@ -401,7 +415,13 @@ isOneToOne: false
 "_guard_message":
 { Args: { "g": string,"p": Json,"r": Omit<Database["public"]['Tables']["requests"]['Row'], Database["public"]['Tables']["requests"]['ComputedFields']> }; Returns: string
                            },
+"_in_river":
+{ Args: { "p_x": number,"p_z": number }; Returns: boolean
+                           },
 "_load_scenario":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
+"_load_scenario_requests":
 { Args: Record<PropertyKey, never>; Returns: number
                            },
 "_notification_templates":
@@ -409,6 +429,9 @@ isOneToOne: false
                            },
 "_point_in_polygon":
 { Args: { "poly": Json,"px": number,"pz": number }; Returns: boolean
+                           },
+"_polyline_dist":
+{ Args: { "p_pts": Json,"p_x": number,"p_z": number }; Returns: number
                            },
 "_refusal":
 { Args: { "p_action": string,"p_actor": string,"p_channel": Database["public"]['Enums']["channel"],"p_code": string,"p_message": string,"p_payload"?: Json,"p_request": string,"p_role": string,"p_state": Database["public"]['Enums']["request_state"] }; Returns: Json

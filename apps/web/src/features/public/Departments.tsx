@@ -16,7 +16,7 @@ export function DepartmentList() {
       <ul className="grid gap-3 sm:grid-cols-2">
         {depts?.map((d) => (
           <li key={d.code} className="rounded-lg border border-line bg-surface p-4">
-            <h3 className="text-lg">{nameOf(d, lang)}</h3>
+            <h2 className="text-lg">{nameOf(d, lang)}</h2>
             <ul className="mt-2 space-y-1">
               {cats
                 ?.filter((c) => c.department_code === d.code)

@@ -21,32 +21,40 @@ import {
   Users,
   Workflow,
 } from 'lucide-react';
-import type { ReactNode } from 'react';
-import { LoginPage } from '@/features/auth/LoginPage';
+import { type ComponentType, lazy, type ReactNode } from 'react';
 import type { Role } from '@/features/auth/store';
 import type { Access } from './access';
-import { ComplaintDetail } from '@/features/citizen/ComplaintDetail';
-import { CitizenHome, MyComplaints } from '@/features/citizen/MyComplaints';
-import { NotificationsPage } from '@/features/citizen/NotificationsPage';
-import { ProfilePage } from '@/features/citizen/ProfilePage';
-import { DepartmentsPage } from '@/features/public/Departments';
-import { PublicHome } from '@/features/public/PublicHome';
-import { TrackPage } from '@/features/public/TrackPage';
-import { ReportPage } from '@/features/report/ReportPage';
-import { Board } from '@/features/department/Board';
-import { Escalations, Officers, ToAssign } from '@/features/department/Lists';
-import { MyWork } from '@/features/officer/MyWork';
-import { RequestDetail } from '@/features/request-detail/RequestDetail';
-import { AllRequests } from '@/features/triage/AllRequests';
-import { Duplicates } from '@/features/triage/Duplicates';
-import { TriageQueue } from '@/features/triage/TriageQueue';
-import { ApiConsole } from '@/features/admin/ApiConsole';
-import { AuditLog } from '@/features/admin/AuditLog';
-import { Overview } from '@/features/admin/Overview';
-import { TimeMachine } from '@/features/admin/TimeMachine';
-import { Users as UsersPage } from '@/features/admin/Users';
-import { WorkflowSla } from '@/features/admin/WorkflowSla';
-import { CityExplorer } from '@/features/city/CityExplorer';
+
+/** Each page is its own chunk; App wraps route elements in Suspense. */
+function page<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
+  return lazy(() => load().then((m) => ({ default: m[name] })));
+}
+const LoginPage = page(() => import('@/features/auth/LoginPage'), 'LoginPage');
+const ComplaintDetail = page(() => import('@/features/citizen/ComplaintDetail'), 'ComplaintDetail');
+const CitizenHome = page(() => import('@/features/citizen/MyComplaints'), 'CitizenHome');
+const MyComplaints = page(() => import('@/features/citizen/MyComplaints'), 'MyComplaints');
+const NotificationsPage = page(() => import('@/features/citizen/NotificationsPage'), 'NotificationsPage');
+const ProfilePage = page(() => import('@/features/citizen/ProfilePage'), 'ProfilePage');
+const DepartmentsPage = page(() => import('@/features/public/Departments'), 'DepartmentsPage');
+const PublicHome = page(() => import('@/features/public/PublicHome'), 'PublicHome');
+const TrackPage = page(() => import('@/features/public/TrackPage'), 'TrackPage');
+const ReportPage = page(() => import('@/features/report/ReportPage'), 'ReportPage');
+const Board = page(() => import('@/features/department/Board'), 'Board');
+const Escalations = page(() => import('@/features/department/Lists'), 'Escalations');
+const Officers = page(() => import('@/features/department/Lists'), 'Officers');
+const ToAssign = page(() => import('@/features/department/Lists'), 'ToAssign');
+const MyWork = page(() => import('@/features/officer/MyWork'), 'MyWork');
+const RequestDetail = page(() => import('@/features/request-detail/RequestDetail'), 'RequestDetail');
+const AllRequests = page(() => import('@/features/triage/AllRequests'), 'AllRequests');
+const Duplicates = page(() => import('@/features/triage/Duplicates'), 'Duplicates');
+const TriageQueue = page(() => import('@/features/triage/TriageQueue'), 'TriageQueue');
+const ApiConsole = page(() => import('@/features/admin/ApiConsole'), 'ApiConsole');
+const AuditLog = page(() => import('@/features/admin/AuditLog'), 'AuditLog');
+const Overview = page(() => import('@/features/admin/Overview'), 'Overview');
+const TimeMachine = page(() => import('@/features/admin/TimeMachine'), 'TimeMachine');
+const UsersPage = page(() => import('@/features/admin/Users'), 'Users');
+const WorkflowSla = page(() => import('@/features/admin/WorkflowSla'), 'WorkflowSla');
+const CityExplorer = page(() => import('@/features/city/CityExplorer'), 'CityExplorer');
 
 export type AppRoute = {
   path: string;

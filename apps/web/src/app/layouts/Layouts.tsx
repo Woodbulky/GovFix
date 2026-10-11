@@ -1,15 +1,17 @@
 import { Leaf } from 'lucide-react';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/Toaster';
 import { useAuth } from '@/features/auth/store';
 import { useNotifications } from '@/features/citizen/hooks';
-import { Niva } from '@/features/niva/NivaCall';
 import { useDemoMode } from '@/lib/queries';
 import { rpc } from '@/lib/rpc';
 import { cn } from '@/lib/utils';
 import { navFor } from '../routes';
+
+// The ElevenLabs SDK is heavy; it loads after the shell, not with it.
+const Niva = lazy(() => import('@/features/niva/NivaCall').then((m) => ({ default: m.Niva })));
 import { HeaderControls } from './HeaderControls';
 
 function Logo({ dark }: { dark: boolean }) {
@@ -142,7 +144,11 @@ export function AppShell() {
   return (
     <>
       {role && role !== 'citizen' ? <StaffLayout /> : <TopBarLayout />}
-      {role && <Niva />}
+      {role && (
+        <Suspense fallback={null}>
+          <Niva />
+        </Suspense>
+      )}
       <Toaster />
     </>
   );

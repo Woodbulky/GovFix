@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/store';
 import { useAppSettings, useDemoMode } from '@/lib/queries';
@@ -33,7 +33,7 @@ export function App() {
                 path={r.path}
                 element={
                   <Guard access={r.access} demoOnly={r.demo}>
-                    {r.element}
+                    <Suspense fallback={null}>{r.element}</Suspense>
                   </Guard>
                 }
               />

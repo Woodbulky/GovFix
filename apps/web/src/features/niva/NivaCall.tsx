@@ -67,6 +67,11 @@ function Call() {
   const [failed, setFailed] = useState(false);
   const pageRef = useRef(page);
   pageRef.current = page;
+  // Full-screen call is a modal dialog: move keyboard focus into it when it opens or is expanded again.
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!docked) dialogRef.current?.focus();
+  }, [docked]);
 
   const toTyping = () => {
     close();
@@ -203,10 +208,12 @@ function Call() {
 
   return (
     <div
+      ref={dialogRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label={t('niva.title')}
-      className="fixed inset-0 z-40 overflow-y-auto bg-canopy text-white"
+      className="fixed inset-0 z-40 overflow-y-auto bg-canopy text-white outline-none"
     >
       <div className="mx-auto grid min-h-full max-w-[1100px] gap-6 p-4 md:grid-cols-[1fr_380px] md:p-8">
         <div className="flex flex-col items-center justify-center gap-5 text-center">

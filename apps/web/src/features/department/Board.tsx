@@ -8,7 +8,8 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useState } from 'react';
+import { GripVertical } from 'lucide-react';
+import { type KeyboardEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { EscalationBadge } from '@/components/EscalationBadge';
@@ -108,14 +109,19 @@ function Column({ state, cards }: { state: State; cards: StaffRequest[] }) {
 }
 
 function Card({ r }: { r: StaffRequest }) {
+  const { t } = useTranslation();
   const title = useRequestTitle(r);
   const place = usePlaceLabel(r);
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: r.id });
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, isDragging } = useDraggable({
+    id: r.id,
+  });
+  // Pointer drag works anywhere on the card; keyboard drag starts from the handle, so the ticket link stays a
+  // plain link (no interactive element nested inside another).
+  const { onKeyDown, ...pointer } = listeners ?? {};
   return (
     <li
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
+      {...pointer}
       style={{
         transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
         // Snap back when a drop is refused (off under prefers-reduced-motion).
@@ -126,9 +132,21 @@ function Card({ r }: { r: StaffRequest }) {
         isDragging && 'relative z-10 shadow-lg',
       )}
     >
-      <Link to={`/requests/${r.id}`} className="tabular font-semibold text-nmc hover:underline">
-        {r.ticket_no}
-      </Link>
+      <div className="flex items-center justify-between gap-1">
+        <Link to={`/requests/${r.id}`} className="tabular font-semibold text-nmc hover:underline">
+          {r.ticket_no}
+        </Link>
+        <button
+          type="button"
+          ref={setActivatorNodeRef}
+          {...attributes}
+          onKeyDown={onKeyDown as KeyboardEventHandler}
+          aria-label={t('staff.moveCard', { ticket: r.ticket_no })}
+          className="-m-1 flex h-11 w-11 shrink-0 items-center justify-center rounded text-ink-muted hover:bg-surface"
+        >
+          <GripVertical className="h-4 w-4" aria-hidden />
+        </button>
+      </div>
       <p className="font-medium">{title}</p>
       <p className="text-ink-muted">{place}</p>
       <div className="flex flex-wrap gap-1">

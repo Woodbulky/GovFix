@@ -508,7 +508,8 @@
       "reject": "Reject"
     },
     "noDupes": "No possible duplicates waiting for a decision.",
-    "boardHint": "Drag a card to another column, or focus it and use Space and the arrow keys. Moves the workflow doesn't allow are refused and logged.",
+    "moveCard": "Move {{ticket}}",
+    "boardHint": "Drag a card to another column, or focus its handle and use Space and the arrow keys. Moves the workflow doesn't allow are refused and logged.",
     "nothingToAssign": "Every request in your department has an officer.",
     "noEscalations": "No requests past their deadline.",
     "officersCol": {
