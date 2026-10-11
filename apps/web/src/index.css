@@ -3,15 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --nmc-green: #0f4c3a;
-  --nmc-green-600: #146b51;
-  --canopy: #0a2e24;
-  --paper: #f4f7f4;
+  /* govfix2 palette: forest, teal, mint, amber, coral on ivory. */
+  --nmc-green: #07382d; /* forest */
+  --nmc-green-rgb: 7 56 45;
+  --nmc-green-600: #0a665f; /* teal */
+  --nmc-green-600-rgb: 10 102 95;
+  --canopy: #07382d;
+  --canopy-rgb: 7 56 45;
+  --paper: #f6f7f2; /* ivory */
+  --paper-rgb: 246 247 242;
   --surface: #ffffff;
-  --ink: #15201b;
-  --ink-muted: #56645d;
-  --line: #d9e2dc;
-  --marigold: #e8a317;
+  --ink: #102a2e;
+  --ink-muted: #496660;
+  --line: #dde5e0;
+  --marigold: #f2b84b; /* amber */
+  --marigold-rgb: 242 184 75;
+  --mint: #d8eee8;
+  --mint-rgb: 216 238 232;
+  --coral: #e5694f; /* decorative only: 3.3:1 on white */
+  --coral-ink: #b23c26; /* coral for text, 5.5:1 on ivory */
   --river: #2f6f8f;
 
   /* status: [text, background] */
@@ -39,9 +49,9 @@
   --sla-breach: #b91c1c;
   --sla-paused: #6d28d9;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
   --touch: 44px;
 }
 
@@ -51,21 +61,68 @@ html.large-text {
 }
 
 body {
-  @apply bg-paper font-sans text-base text-ink;
+  @apply font-sans text-base text-ink;
   line-height: 1.55;
+  background:
+    radial-gradient(circle at 9% 42%, rgb(216 238 232 / 0.38), transparent 25%),
+    var(--paper);
+  background-attachment: fixed;
 }
 :lang(hi) body,
 :lang(mr) body {
   line-height: 1.7;
 }
 
+/* Serif display for page and section titles (forest), DM Sans for card titles. */
 h1,
-h2,
+h2 {
+  @apply font-heading;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
 h3,
 h4 {
-  @apply font-heading font-semibold;
-  line-height: 1.15;
+  @apply font-sans font-semibold;
+  line-height: 1.25;
 }
+main h1,
+main h2 {
+  color: var(--nmc-green);
+}
+.bg-canopy :is(h1, h2),
+.bg-nmc :is(h1, h2) {
+  color: inherit;
+}
+
+@layer components {
+  /* Small uppercase kicker above titles, amber rule first (govfix2 .page-eyebrow). */
+  .eyebrow {
+    @apply flex items-center gap-2 text-sm font-semibold uppercase text-ink-muted;
+    letter-spacing: 0.14em;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 26px;
+    height: 2px;
+    background: var(--marigold);
+  }
+
+  /* Soft card used across pages: white, hairline border, faint forest shadow. */
+  .card {
+    @apply rounded-lg border border-line bg-surface;
+    box-shadow: 0 4px 14px rgb(7 56 45 / 0.04);
+  }
+}
+/* Tables (govfix2): small uppercase heads on ivory, mint row hover. */
+thead th {
+  @apply text-sm font-bold uppercase text-ink-muted;
+  letter-spacing: 0.08em;
+}
+tbody tr:hover {
+  background: rgb(var(--mint-rgb) / 0.35);
+}
+
 :lang(hi) :is(h1, h2, h3, h4),
 :lang(mr) :is(h1, h2, h3, h4) {
   line-height: 1.3;

@@ -39,7 +39,7 @@ function Detail({ r, timeline, messages }: { r: MyRequest } & Omit<DetailData, '
     <article className="space-y-6">
       <header className="space-y-2">
         <p className="tabular text-ink-muted">{r.ticket_no}</p>
-        <h1 className="text-2xl">{title}</h1>
+        <h1 className="text-3xl">{title}</h1>
         <p className="text-ink-muted">{place}</p>
         <div className="flex flex-wrap gap-2">
           <StatusChip state={r.state} />
@@ -55,7 +55,7 @@ function Detail({ r, timeline, messages }: { r: MyRequest } & Omit<DetailData, '
 
       <section className="space-y-2">
         <h2 className="text-xl">{t('detail.yourReport')}</h2>
-        <p className="whitespace-pre-line rounded-lg bg-surface p-4">{r.description}</p>
+        <p className="whitespace-pre-line card p-4">{r.description}</p>
       </section>
 
       {!!photos?.length && (

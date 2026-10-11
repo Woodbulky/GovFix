@@ -28,7 +28,7 @@ export function TrackPage() {
 
   return (
     <section className="space-y-6">
-      <h1 className="text-2xl">{t('nav.track')}</h1>
+      <h1 className="text-3xl">{t('nav.track')}</h1>
       <form
         onSubmit={(e) => void submit(e)}
         className="grid max-w-[640px] gap-4 sm:grid-cols-[2fr_1fr_auto] sm:items-end"
@@ -62,7 +62,7 @@ function TrackResult({ data }: { data: PublicTimeline }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'en' | 'hi' | 'mr';
   return (
-    <article className="space-y-4 rounded-lg bg-surface p-5 shadow-sm">
+    <article className="space-y-4 card p-5">
       <header className="flex flex-wrap items-center gap-2">
         <h2 className="tabular mr-auto text-xl">{data.ticket_no}</h2>
         <StatusChip state={data.state} />

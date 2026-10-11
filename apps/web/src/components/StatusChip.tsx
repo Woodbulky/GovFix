@@ -31,7 +31,7 @@ export function StatusChip({ state }: { state: State }) {
   const [Icon, token] = STYLE[state];
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-sm font-medium"
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-semibold"
       style={{ color: `var(--st-${token})`, background: `var(--st-${token}-bg)` }}
     >
       <Icon aria-hidden size={16} />

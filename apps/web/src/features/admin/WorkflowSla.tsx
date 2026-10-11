@@ -140,9 +140,9 @@ export function WorkflowSla() {
   const list = (xs: string[]) => (xs.length ? xs.join(', ') : '—');
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.workflow')}</h1>
+      <h1 className="text-3xl">{t('nav.workflow')}</h1>
       <section className={panel}>{rows.length > 0 && <Diagram edges={rows} label={t('admin.wf.diagram')} />}</section>
-      <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+      <div className="overflow-x-auto card">
         <table className="w-full text-left text-sm">
           <thead className="bg-paper">
             <tr>

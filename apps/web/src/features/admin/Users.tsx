@@ -25,8 +25,8 @@ export function Users() {
   });
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.users')}</h1>
-      <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+      <h1 className="text-3xl">{t('nav.users')}</h1>
+      <div className="overflow-x-auto card">
         <table className="w-full text-left text-sm">
           <thead className="bg-paper">
             <tr>

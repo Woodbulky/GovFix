@@ -26,7 +26,7 @@ export function MyWork() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.myWork')}</h1>
+      <h1 className="text-3xl">{t('nav.myWork')}</h1>
       <FilterChips
         label={t('staff.filter')}
         options={Object.keys(TABS).map((k) => [

@@ -20,7 +20,7 @@ export function NotAvailable() {
   const { t } = useTranslation();
   const profile = useAuth((s) => s.profile);
   return (
-    <section className="mx-auto max-w-[640px] rounded-lg bg-surface p-6 text-center shadow-sm">
+    <section className="mx-auto max-w-[640px] card p-6 text-center">
       <Ban aria-hidden className="mx-auto text-st-rejected" size={40} />
       <h1 className="mt-3 text-2xl">{t('notAvailable.title')}</h1>
       <p className="mt-2 text-ink-muted">{t('notAvailable.body')}</p>

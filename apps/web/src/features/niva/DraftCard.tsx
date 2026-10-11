@@ -19,9 +19,9 @@ export function DraftCard() {
 
   if (submitted)
     return (
-      <section className="space-y-3 rounded-lg bg-surface p-4 text-ink" aria-live="polite">
+      <section className="space-y-3 card p-4 text-ink" aria-live="polite">
         <p className="text-ink-muted">{t('report.successTitle')}</p>
-        <p className="tabular font-heading text-3xl font-bold text-nmc">{submitted.ticket}</p>
+        <p className="tabular font-heading text-3xl text-nmc">{submitted.ticket}</p>
         <Link
           to={`/me/complaints/${submitted.id}`}
           className="inline-flex min-h-12 items-center font-semibold underline"
@@ -43,7 +43,7 @@ export function DraftCard() {
     ],
   ];
   return (
-    <section className="space-y-3 rounded-lg bg-surface p-4 text-ink" aria-labelledby="niva-draft">
+    <section className="space-y-3 card p-4 text-ink" aria-labelledby="niva-draft">
       <h2 id="niva-draft" className="text-lg">
         {t('niva.draft.title')}
       </h2>

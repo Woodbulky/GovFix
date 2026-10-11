@@ -53,9 +53,9 @@ export function ProfilePage() {
 
   return (
     <section className="mx-auto max-w-[640px] space-y-4">
-      <h1 className="text-2xl">{t('nav.profile')}</h1>
+      <h1 className="text-3xl">{t('nav.profile')}</h1>
       <p className="text-lg">{me.full_name}</p>
-      <form onSubmit={(e) => void submit(e)} className="space-y-5 rounded-lg bg-surface p-5">
+      <form onSubmit={(e) => void submit(e)} className="space-y-5 card p-5">
         <fieldset>
           <legend className="font-medium">{t('profile.language')}</legend>
           <p className="text-sm text-ink-muted">{t('profile.languageHint')}</p>

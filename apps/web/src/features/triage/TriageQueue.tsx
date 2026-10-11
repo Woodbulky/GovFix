@@ -32,7 +32,7 @@ export function TriageQueue() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">
+      <h1 className="text-3xl">
         {t('nav.triage')} <span className="tabular">({queue.length})</span>
       </h1>
       {!queue.length && <p className="text-ink-muted">{t('staff.queueEmpty')}</p>}
@@ -64,7 +64,7 @@ function TriageCard({ r, onOpen }: { r: StaffRequest; onOpen: () => void }) {
   const place = usePlaceLabel(r);
   const { data: thumb } = usePhotoUrls(r.photos.filter((p) => p.kind === 'report').slice(0, 1));
   return (
-    <article className="flex h-full gap-3 rounded-lg border border-line bg-surface p-3">
+    <article className="flex h-full gap-3 card p-3">
       {thumb?.[0]?.url && <img src={thumb[0].url} alt="" className="h-20 w-20 shrink-0 rounded-md object-cover" />}
       <div className="min-w-0 flex-1 space-y-1">
         <p className="flex flex-wrap items-baseline gap-x-2">

@@ -15,7 +15,7 @@ export function EscalationBadge({ level, triage = false }: Props) {
   const color = toCommissioner ? 'var(--sla-breach)' : 'var(--sla-risk)';
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-sm bg-surface px-2 py-0.5 text-sm font-medium"
+      className="inline-flex items-center gap-1 rounded-full bg-surface px-2.5 py-0.5 text-sm font-semibold"
       style={{ color, boxShadow: `inset 0 0 0 2px ${color}` }}
     >
       <CircleArrowUp aria-hidden size={16} />

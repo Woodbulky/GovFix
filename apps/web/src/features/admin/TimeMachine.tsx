@@ -49,7 +49,7 @@ export function TimeMachine() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.timeMachine')}</h1>
+      <h1 className="text-3xl">{t('nav.timeMachine')}</h1>
       <section className={panel} aria-labelledby="clock-h">
         <h2 id="clock-h" className="text-lg">
           {t('admin.tm.clock')}

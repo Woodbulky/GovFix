@@ -106,7 +106,7 @@ export function AiPanel({ requestId, suggestions }: { requestId: string; suggest
   };
 
   return (
-    <section className="space-y-4 rounded-lg border border-line bg-surface p-4" aria-labelledby="ai-h">
+    <section className="space-y-4 card p-4" aria-labelledby="ai-h">
       <h2 id="ai-h" className="text-lg">
         {t('staff.ai')}
       </h2>

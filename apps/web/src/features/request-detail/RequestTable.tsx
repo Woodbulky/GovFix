@@ -21,7 +21,7 @@ export function RequestTable({ rows, extra, empty }: Props) {
   const { t } = useTranslation();
   if (!rows.length) return <p className="text-ink-muted">{empty ?? t('staff.empty')}</p>;
   return (
-    <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+    <div className="overflow-x-auto card">
       <table className="w-full text-left text-sm">
         <thead className="sticky top-0 bg-paper">
           <tr>

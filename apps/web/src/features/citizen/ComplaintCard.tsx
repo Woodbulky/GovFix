@@ -25,7 +25,7 @@ export function ComplaintCard({ r }: { r: MyRequest }) {
   const url = thumb?.[0]?.url;
 
   return (
-    <article className="flex gap-3 rounded-lg border border-line bg-surface p-3">
+    <article className="flex gap-3 card p-3">
       <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-paper">
         {url ? (
           <img src={url} alt="" className="h-full w-full object-cover" />

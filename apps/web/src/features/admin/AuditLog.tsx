@@ -79,7 +79,7 @@ export function AuditLog() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.audit')}</h1>
+      <h1 className="text-3xl">{t('nav.audit')}</h1>
       <div className={cn(panel, 'flex flex-wrap items-center gap-3')}>
         <button className={primary} onClick={() => void runVerify()}>
           {t('admin.audit.verify')}
@@ -144,7 +144,7 @@ export function AuditLog() {
         />
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+      <div className="overflow-x-auto card">
         <table className="w-full text-left text-sm">
           <thead className="sticky top-0 bg-paper">
             <tr>

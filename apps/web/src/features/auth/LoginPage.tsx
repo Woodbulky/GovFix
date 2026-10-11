@@ -26,8 +26,9 @@ export function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-[440px] space-y-6 rounded-lg bg-surface p-6 shadow-sm">
-      <h1 className="text-2xl">{t('auth.title')}</h1>
+    <div className="card mx-auto max-w-[460px] space-y-6 rounded-[24px_24px_24px_6px] p-8 shadow-[0_18px_40px_rgb(7_56_45/0.08)]">
+      <p className="eyebrow">{t('app.org')}</p>
+      <h1 className="!mt-2 text-3xl">{t('auth.title')}</h1>
       <form onSubmit={(e) => void submit(e)} className="space-y-4">
         <label className="block">
           <span className="font-medium">{t('auth.email')}</span>

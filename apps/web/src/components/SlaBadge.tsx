@@ -63,7 +63,7 @@ export function SlaBadge({ status, dueAt, audience = 'staff' }: Props) {
 
   return (
     <span
-      className="tabular inline-flex items-center gap-1 rounded-sm border bg-surface px-2 py-0.5 text-sm font-medium"
+      className="tabular inline-flex items-center gap-1 rounded-full border bg-surface px-2.5 py-0.5 text-sm font-semibold"
       style={{ color, borderColor: color }}
     >
       <Icon aria-hidden size={16} />

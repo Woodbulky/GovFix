@@ -73,7 +73,7 @@ export function ToAssign() {
     .sort((a, b) => Date.parse(a.resolution_due_at ?? '') - Date.parse(b.resolution_due_at ?? ''));
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.toAssign')}</h1>
+      <h1 className="text-3xl">{t('nav.toAssign')}</h1>
       <RequestTable rows={rows} extra={cell} empty={t('staff.nothingToAssign')} />
       {dialog}
     </section>
@@ -95,7 +95,7 @@ export function Escalations() {
     .sort((a, b) => b.escalation_level - a.escalation_level || (b.sla_ratio ?? 0) - (a.sla_ratio ?? 0));
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.escalations')}</h1>
+      <h1 className="text-3xl">{t('nav.escalations')}</h1>
       <RequestTable rows={rows} extra={cell} empty={t('staff.noEscalations')} />
       {dialog}
     </section>
@@ -122,8 +122,8 @@ export function Officers() {
   };
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.officers')}</h1>
-      <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+      <h1 className="text-3xl">{t('nav.officers')}</h1>
+      <div className="overflow-x-auto card">
         <table className="w-full text-left text-sm">
           <thead className="bg-paper">
             <tr>

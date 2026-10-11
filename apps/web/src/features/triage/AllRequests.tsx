@@ -58,7 +58,7 @@ export function AllRequests() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.allRequests')}</h1>
+      <h1 className="text-3xl">{t('nav.allRequests')}</h1>
       <div className="flex flex-wrap items-end gap-3">
         <label className="block">
           <span className="font-medium">{t('staff.search')}</span>

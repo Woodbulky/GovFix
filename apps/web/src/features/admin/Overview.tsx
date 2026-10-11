@@ -3,14 +3,14 @@ import { CityMap2D } from '@/features/city/CityMap2D';
 import { useStaffRequests } from '@/features/request-detail/hooks';
 import { nameOf, useCategories, useDepartments, useWards } from '@/lib/reference';
 
-export const panel = 'rounded-lg border border-line bg-surface p-4';
+export const panel = 'card p-5';
 const OPEN = ['SUBMITTED', 'TRIAGED', 'ASSIGNED', 'IN_PROGRESS', 'NEEDS_INFO', 'RESOLVED', 'REOPENED'] as const;
 
 function Tile({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
-    <div className={panel}>
+    <div className={`${panel} border-t-4 border-t-nmc-600`}>
       <p className="text-sm text-ink-muted">{label}</p>
-      <p className="tabular text-3xl font-semibold">{value}</p>
+      <p className="tabular mt-1 font-heading text-4xl text-nmc">{value}</p>
       {hint && <p className="text-sm text-ink-muted">{hint}</p>}
     </div>
   );
@@ -28,7 +28,7 @@ function Bars({ title, rows, unit = '' }: { title: string; rows: [string, number
           {rows.map(([label, n]) => (
             <li key={label} className="grid grid-cols-[10rem_1fr_3.5rem] items-center gap-2 text-sm">
               <span className="truncate">{label}</span>
-              <span className="h-3 rounded-sm bg-nmc" style={{ width: `${(n / max) * 100}%` }} aria-hidden />
+              <span className="h-3 rounded-full bg-nmc-600" style={{ width: `${(n / max) * 100}%` }} aria-hidden />
               <span className="tabular text-right">
                 {Number.isInteger(n) ? n : n.toFixed(1)}
                 {unit}
@@ -80,7 +80,7 @@ export function Overview() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.overview')}</h1>
+      <h1 className="text-3xl">{t('nav.overview')}</h1>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Tile
           label={t('admin.overview.compliance')}
@@ -102,7 +102,7 @@ export function Overview() {
           {OPEN.map((s) => (
             <div key={s}>
               <dt className="text-sm text-ink-muted">{t(`state.${s}`)}</dt>
-              <dd className="tabular text-2xl font-semibold">{count((r) => r.state === s)}</dd>
+              <dd className="tabular font-heading text-3xl text-nmc">{count((r) => r.state === s)}</dd>
             </div>
           ))}
         </dl>

@@ -2,7 +2,7 @@ import { Volume2 } from 'lucide-react';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CategoryIcon } from '@/components/CategoryIcon';
+import { CategoryIcon, TINT } from '@/components/CategoryIcon';
 import { toast, useRefusalToast } from '@/components/Toaster';
 import { useAuth } from '@/features/auth/store';
 import { requestSuggestions } from '@/lib/ai';
@@ -95,14 +95,14 @@ export function ReportPage() {
   };
 
   return (
-    <section className="mx-auto max-w-[640px] space-y-6">
-      <h1 className="text-2xl">{t('nav.report')}</h1>
+    <section className="card mx-auto max-w-[760px] space-y-6 rounded-[24px_24px_24px_6px] p-5 sm:p-8">
+      <h1 className="text-3xl">{t('nav.report')}</h1>
       <ol className="flex gap-2" aria-label={t('report.progress')}>
         {STEPS.map((s, i) => (
           <li
             key={s}
             aria-current={i === step ? 'step' : undefined}
-            className={cn('flex-1 border-t-4 pt-1 text-sm', i <= step ? 'border-nmc font-semibold' : 'border-line')}
+            className={cn('flex-1 border-t-4 pt-2 text-sm', i < step ? 'border-nmc-600' : i === step ? 'border-marigold font-semibold' : 'border-line text-ink-muted')}
           >
             {i + 1}. {t(`report.step.${s}`)}
           </li>
@@ -119,8 +119,8 @@ export function ReportPage() {
                   <label
                     key={code || 'not-sure'}
                     className={cn(
-                      'flex min-h-[56px] cursor-pointer items-center gap-2 rounded-md border bg-surface p-3 focus-within:outline focus-within:outline-2',
-                      category === code ? 'border-nmc ring-2 ring-nmc' : 'border-line',
+                      'flex min-h-[56px] cursor-pointer items-center gap-3 rounded-md border bg-surface p-3 transition focus-within:outline focus-within:outline-2 hover:border-nmc-600',
+                      category === code ? 'border-nmc bg-mint/40 ring-2 ring-nmc' : 'border-line',
                     )}
                   >
                     <input
@@ -131,7 +131,9 @@ export function ReportPage() {
                       onChange={() => setCategory(code)}
                       className="sr-only"
                     />
-                    <CategoryIcon name={icon} size={22} className="shrink-0 text-nmc" />
+                    <span className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-md', TINT[icon ?? ''] ?? TINT['circle-help'])}>
+                      <CategoryIcon name={icon} size={22} />
+                    </span>
                     {catName(code)}
                   </label>
                 ),
@@ -154,7 +156,7 @@ export function ReportPage() {
       {step === 1 && <LocationStep place={place} onChange={setPlace} />}
       {step === 2 && <PhotoStep photos={photos} onChange={setPhotos} />}
       {step === 3 && (
-        <dl className="space-y-3 rounded-lg bg-surface p-4">
+        <dl className="space-y-3 card p-4">
           <Row label={t('report.step.issue')} onEdit={() => setStep(0)}>
             <strong>{catName(category)}</strong>
             <p className="whitespace-pre-line">{description || '—'}</p>
@@ -215,9 +217,9 @@ function Success({ id, ticket }: { id: string; ticket: string }) {
   const hours = useAppSettings().data?.triage_hours ?? 4;
   const message = t('report.successBody', { n: hours });
   return (
-    <section className="mx-auto max-w-[640px] space-y-5 rounded-lg bg-surface p-6 text-center shadow-sm">
+    <section className="mx-auto max-w-[640px] space-y-5 card p-6 text-center">
       <p className="text-ink-muted">{t('report.successTitle')}</p>
-      <p className="tabular font-heading text-4xl font-bold text-nmc">{ticket}</p>
+      <p className="tabular font-heading text-5xl text-nmc">{ticket}</p>
       <p>{message}</p>
       <button
         type="button"

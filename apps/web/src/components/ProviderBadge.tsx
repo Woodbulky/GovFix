@@ -10,7 +10,7 @@ export function ProviderBadge({ provider }: { provider: Provider | string }) {
   const { t } = useTranslation();
   const Icon = ICON[provider as Provider] ?? Cpu;
   return (
-    <span className="inline-flex items-center gap-1 rounded-sm border border-line px-1.5 py-0.5 text-sm text-ink-muted">
+    <span className="inline-flex items-center gap-1 rounded-sm bg-mint px-1.5 py-0.5 font-mono text-sm text-nmc-600">
       <Icon aria-hidden size={14} />
       {t(`provider.${provider}`, { defaultValue: provider })}
     </span>

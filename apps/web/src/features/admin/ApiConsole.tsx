@@ -77,7 +77,7 @@ export function ApiConsole() {
   const auditId = (out?.body as { audit_id?: number } | null)?.audit_id;
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.apiConsole')}</h1>
+      <h1 className="text-3xl">{t('nav.apiConsole')}</h1>
       <p className="text-ink-muted">{t('admin.api.hint')}</p>
       <div className={`${panel} grid gap-3 md:grid-cols-2`}>
         <label className="flex flex-col text-sm">

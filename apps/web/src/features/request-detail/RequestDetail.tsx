@@ -25,7 +25,7 @@ import {
 } from './hooks';
 import { useAllowedActions } from './useAllowedActions';
 
-const panel = 'space-y-4 rounded-lg border border-line bg-surface p-4';
+const panel = 'space-y-4 card p-4';
 
 export function RequestDetail() {
   const { t } = useTranslation();
@@ -57,7 +57,7 @@ function Complaint({ r, suggestions }: { r: StaffRequest; suggestions: Suggestio
         <p className="tabular text-ink-muted">
           {r.ticket_no} · {t(`staff.channel.${r.channel}`, { defaultValue: r.channel })} · {r.language}
         </p>
-        <h1 id="complaint-h" className="text-2xl">
+        <h1 id="complaint-h" className="text-3xl">
           {title}
         </h1>
         <p className="text-ink-muted">{place}</p>

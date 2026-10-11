@@ -8,13 +8,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        nmc: { DEFAULT: v('nmc-green'), 600: v('nmc-green-600') },
-        canopy: v('canopy'),
-        paper: v('paper'),
+        nmc: { DEFAULT: 'rgb(var(--nmc-green-rgb) / <alpha-value>)', 600: 'rgb(var(--nmc-green-600-rgb) / <alpha-value>)' },
+        canopy: 'rgb(var(--canopy-rgb) / <alpha-value>)',
+        paper: 'rgb(var(--paper-rgb) / <alpha-value>)',
         surface: v('surface'),
         ink: { DEFAULT: v('ink'), muted: v('ink-muted') },
         line: v('line'),
-        marigold: v('marigold'),
+        marigold: 'rgb(var(--marigold-rgb) / <alpha-value>)',
+        mint: 'rgb(var(--mint-rgb) / <alpha-value>)',
+        coral: { DEFAULT: v('coral'), ink: v('coral-ink') },
         river: v('river'),
         st: Object.fromEntries(
           status.flatMap((s) => [
@@ -26,8 +28,8 @@ export default {
       },
       borderRadius: { sm: v('radius-sm'), md: v('radius-md'), lg: v('radius-lg') },
       fontFamily: {
-        heading: ['"Anek Latin"', '"Anek Devanagari"', 'sans-serif'],
-        sans: ['Mukta', 'sans-serif'],
+        heading: ['"DM Serif Display"', '"Anek Devanagari"', 'serif'],
+        sans: ['"DM Sans"', 'Mukta', 'sans-serif'],
       },
       fontSize: {
         xs: '14px',

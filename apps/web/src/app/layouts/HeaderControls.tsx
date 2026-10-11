@@ -47,12 +47,13 @@ export function HeaderControls() {
   const profile = useAuth((s) => s.profile);
   const [large, setLarge] = useState(readLarge);
   const staff = profile && profile.role !== 'citizen';
-  const outline = 'border border-line bg-surface';
+  const outline = 'border border-line bg-surface hover:border-nmc-600';
+  const amber = 'bg-marigold font-semibold text-canopy shadow-sm hover:brightness-95';
 
   return (
     <div className="flex flex-wrap items-center gap-2">
       <SimTimeBadge />
-      <div role="group" aria-label={t('lang.label')} className="flex gap-1">
+      <div role="group" aria-label={t('lang.label')} className="flex gap-0.5 rounded-md border border-line bg-surface p-0.5">
         {LANGS.map((l) => (
           <button
             key={l}
@@ -76,11 +77,11 @@ export function HeaderControls() {
         {t('largeText')}
       </button>
       {profile ? (
-        <button onClick={startNiva} className={cn(ctl, 'bg-marigold font-semibold text-canopy')}>
+        <button onClick={startNiva} className={cn(ctl, amber)}>
           <Mic aria-hidden size={18} /> {staff ? 'NIVA' : t('actions.talk')}
         </button>
       ) : (
-        <Link to="/report?mode=talk" className={cn(ctl, 'bg-marigold font-semibold text-canopy')}>
+        <Link to="/report?mode=talk" className={cn(ctl, amber)}>
           <Mic aria-hidden size={18} /> {t('actions.talk')}
         </Link>
       )}

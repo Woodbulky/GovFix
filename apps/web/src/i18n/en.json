@@ -156,7 +156,10 @@
   },
   "home": {
     "categories": "What can you report?",
-    "exploreCity": "Explore the city"
+    "exploreCity": "Explore the city",
+    "trustReadBack": "NIVA reads it back before filing",
+    "trustAudit": "Every action is logged",
+    "cityCaption": "Live city: open complaints"
   },
   "how": {
     "title": "How it works",
@@ -720,5 +723,10 @@
     "tool": {
       "notFound": "No matching place or visible ticket"
     }
+  },
+  "brand": {
+    "staffOps": "Staff operations",
+    "tagline": "A cleaner, safer Navnagar for everyone.",
+    "fictional": "Fictional city · civic workflow demo"
   }
 }

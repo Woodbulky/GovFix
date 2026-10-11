@@ -33,7 +33,7 @@ export function MyComplaints() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.myComplaints')}</h1>
+      <h1 className="text-3xl">{t('nav.myComplaints')}</h1>
       <div role="group" aria-label={t('mine.filter')} className="flex gap-1 overflow-x-auto">
         {Object.keys(TABS).map((k) => (
           <button
@@ -69,8 +69,9 @@ export function CitizenHome() {
 
   return (
     <div className="space-y-8">
-      <section className="space-y-4 rounded-lg bg-canopy p-6 text-white">
-        <h1 className="text-3xl">{t('citizen.greeting', { name })}</h1>
+      <section className="relative space-y-4 overflow-hidden rounded-[30px_30px_30px_8px] bg-canopy bg-[radial-gradient(circle_at_80%_20%,rgb(30_126_110/0.34),transparent_40%)] p-6 text-white shadow-[0_28px_58px_rgb(7_56_45/0.19)] sm:p-10">
+        <p className="eyebrow text-mint/80">{t('app.org')}</p>
+        <h1 className="text-4xl">{t('citizen.greeting', { name })}</h1>
         <p className="text-white/85">{t('hero.body')}</p>
         <div className="flex flex-wrap gap-3">
           <Link
@@ -88,7 +89,7 @@ export function CitizenHome() {
         </div>
       </section>
       <section className="space-y-3">
-        <h2 className="text-xl">
+        <h2 className="text-2xl">
           {t('citizen.open')} <span className="tabular">({open.length})</span>
         </h2>
         {data && !open.length && <p className="text-ink-muted">{t('citizen.noneOpen')}</p>}

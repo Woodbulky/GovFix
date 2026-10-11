@@ -35,11 +35,11 @@ export function Duplicates() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.duplicates')}</h1>
+      <h1 className="text-3xl">{t('nav.duplicates')}</h1>
       {!pairs.length && <p className="text-ink-muted">{t('staff.noDupes')}</p>}
       <ul className="space-y-3">
         {pairs.map(({ s, a, b, dist }) => (
-          <li key={s.id} className="space-y-2 rounded-lg border border-line bg-surface p-3">
+          <li key={s.id} className="space-y-2 card p-3">
             <p className="flex flex-wrap items-center gap-2">
               <span className="tabular font-semibold">
                 {a!.ticket_no} ↔ {b?.ticket_no ?? '—'}
