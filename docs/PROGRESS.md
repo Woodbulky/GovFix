@@ -22,8 +22,9 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - [x] `SUPABASE_SERVICE_ROLE_KEY` in `.env`; `DEMO_PASSWORD` and `AI_WRITER_PASSWORD` generated into `.env` by Claude (change them if you like)
 - [x] `SUPABASE_DB_URL` in `.env`. `npm run db:push` and `npm run db:types` both work
 - [ ] **Rotate (if not done) the Groq, ElevenLabs and service-role keys**: they were briefly in `.env.example`. Moved to `.env` before the first commit, so they never reached git
-- [ ] ElevenLabs agent NIVA created per docs/NIVA.md; voice IDs in `.env`; Marathi voice tested
-- [ ] `GROQ_MODEL` in `.env` (`GROQ_API_KEY` set (and later in Render)
+- [x] ElevenLabs agent NIVA created per docs/NIVA.md (English default + Marathi + Hindi, Hinglish Mode, Sarah voice, prompt, 5 vars, Language override, authentication on); voice IDs in `.env`; Marathi TTS tested. Client tools are registered in P7
+- [ ] Delete the blank line before `{{first_message}}` in the English (default) first message, then Publish
+- [x] `GROQ_API_KEY` (15 valid keys) and `GROQ_MODEL=openai/gpt-oss-120b` in `.env` (set in Render later; Lane C may pick another model in P6)
 - [ ] Vercel project (root dir `apps/web`) and Render service (from `render.yaml`) connected to the GitHub repo
 - [ ] Seed photos in `supabase/seed/photos/` (own photos; no faces or number plates)
 
@@ -35,6 +36,13 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
 
 ## Entries
+
+### Setup check (2026-10-11 15:10)
+- All green: lint, typecheck, web tests, web build, AI tests, `db push` ("up to date"), engine/RLS tests 25/25.
+- Connections verified: `SUPABASE_DB_URL` (db push), `AI_DATABASE_URL` (ai_writer via the aws-0 pooler), ElevenLabs agent read and signed-URL issue (authentication on), Groq (15 unique valid keys; one key is listed twice in `.env`), Marathi TTS with the NIVA voice.
+- NIVA agent as configured: default `en`, presets `mr`/`hi` with `{{first_message}}`, LLM `deepseek-v41-flash`, TTS `eleven_v4_turbo`, voice `gJU2icYQsdEmbGJ65Z8W`, 5 dynamic-variable placeholders, Language override on, no tools yet.
+- Supabase advisor: only the accepted warnings remain (`my_role`/`my_department` callable by design, Supabase's `rls_auto_enable` event trigger, leaked-password protection is a dashboard toggle).
+
 
 ### Fix after P1 (2026-10-11 14:40)
 - `npm run db:push` verified against the cloud: the migrations show as already applied, the seeds re-ran cleanly, and a second push reports "up to date". `npm run db:types` now uses `--db-url` (the CLI's logged-in account had no access to this project) and writes the file only on success. Both call the Supabase CLI without a shell, so passwords in the URL are passed intact.
