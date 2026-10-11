@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --nmc-green: #0f4c3a;
+  --nmc-green-600: #146b51;
+  --canopy: #0a2e24;
+  --paper: #f4f7f4;
+  --surface: #ffffff;
+  --ink: #15201b;
+  --ink-muted: #56645d;
+  --line: #d9e2dc;
+  --marigold: #e8a317;
+  --river: #2f6f8f;
+
+  /* status: [text, background] */
+  --st-submitted: #475569;
+  --st-submitted-bg: #eef2f5;
+  --st-triaged: #8a5a00;
+  --st-triaged-bg: #fff4d6;
+  --st-assigned: #9a3d0b;
+  --st-assigned-bg: #ffe9dc;
+  --st-progress: #1d4ed8;
+  --st-progress-bg: #e5edff;
+  --st-info: #6d28d9;
+  --st-info-bg: #f0e8ff;
+  --st-resolved: #166534;
+  --st-resolved-bg: #e3f5e9;
+  --st-closed: #4b5563;
+  --st-closed-bg: #f1f2f4;
+  --st-rejected: #991b1b;
+  --st-rejected-bg: #fde8e8;
+  --st-reopened: #9d174d;
+  --st-reopened-bg: #fce7f1;
+
+  --sla-ok: #166534;
+  --sla-risk: #b45309;
+  --sla-breach: #b91c1c;
+  --sla-paused: #6d28d9;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --touch: 44px;
+}
+
+html.large-text {
+  font-size: 118%;
+  --touch: 52px;
+}
+
+body {
+  @apply bg-paper font-sans text-base text-ink;
+  line-height: 1.55;
+}
+:lang(hi) body,
+:lang(mr) body {
+  line-height: 1.7;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  @apply font-heading font-semibold;
+  line-height: 1.15;
+}
+:lang(hi) :is(h1, h2, h3, h4),
+:lang(mr) :is(h1, h2, h3, h4) {
+  line-height: 1.3;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 3px solid var(--nmc-green-600);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

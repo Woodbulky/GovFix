@@ -1,0 +1,9 @@
+node_modules
+dist
+supabase/.temp
+supabase/seed/*.sql
+apps/web/src/lib/database.types.ts
+docs
+*.md
+package-lock.json
+services/ai

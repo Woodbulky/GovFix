@@ -1,0 +1,11 @@
+{
+  "app": { "name": "GovFix", "org": "Navnagar Municipal Corporation" },
+  "lang": { "en": "EN", "hi": "हिंदी", "mr": "मराठी", "label": "Language" },
+  "largeText": "Large text",
+  "hero": {
+    "title": "Report a problem in your ward",
+    "body": "Tell NIVA in your own language, or type it. We review every complaint within 4 hours."
+  },
+  "actions": { "talk": "Talk to NIVA", "type": "Report by typing" },
+  "tokens": { "status": "Status colours", "sla": "Deadline colours", "type": "Type scale" }
+}

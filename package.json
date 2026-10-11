@@ -1,0 +1,44 @@
+{
+  "name": "govfix",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "dev": "npm -w apps/web run dev",
+    "build": "npm -w apps/web run build",
+    "ai": "uv run --project services/ai uvicorn app.main:app --app-dir services/ai --port 8787 --reload",
+    "db:push": "tsx --env-file=.env scripts/db-push.ts",
+    "db:types": "supabase gen types typescript --project-id xwojruafxtczmqwsasgk --schema public > apps/web/src/lib/database.types.ts",
+    "seed:users": "tsx --env-file=.env scripts/seed-users.ts",
+    "ai:password": "tsx --env-file=.env scripts/set-ai-writer-password.ts",
+    "gen:workflow": "tsx scripts/gen-workflow.ts",
+    "gen:city": "tsx scripts/gen-city-seed.ts",
+    "demo:reset": "tsx --env-file=.env scripts/demo-reset.ts",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc -p scripts --noEmit && npm -w apps/web run typecheck",
+    "test": "npm -w apps/web run test",
+    "test:engine": "vitest run --root tests/engine",
+    "test:ai": "uv run --project services/ai pytest services/ai/tests -q"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@supabase/supabase-js": "2.117.3",
+    "@types/node": "22.20.5",
+    "eslint": "9.39.5",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "15.15.0",
+    "prettier": "3.9.10",
+    "supabase": "2.120.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "vitest": "2.1.9",
+    "yaml": "2.9.1"
+  }
+}

@@ -1,0 +1,146 @@
+# GovFix workflow: single source of truth.
+# `npm run gen:workflow` turns this into supabase/seed/01_workflow.sql
+# (workflow_transitions, sla_policies, app_settings). The engine reads the tables, never this file.
+
+version: 1
+track: municipal_grievance
+
+roles: [citizen, officer, dept_head, manager, commissioner, system]
+
+states:
+  SUBMITTED: { accountable: manager }
+  TRIAGED: { accountable: dept_head }
+  ASSIGNED: { accountable: officer }
+  IN_PROGRESS: { accountable: officer }
+  NEEDS_INFO: { accountable: citizen, sla_paused: true }
+  RESOLVED: { accountable: citizen }
+  REOPENED: { accountable: dept_head }
+  CLOSED: { terminal: true }
+  REJECTED: { terminal: true }
+
+transitions:
+  - action: triage
+    from: [SUBMITTED]
+    to: TRIAGED
+    roles: [manager]
+    requires: [category_code] # department_code too when category is "other"
+    effects: [set_department_from_category, start_resolution_sla]
+
+  - action: reject
+    from: [SUBMITTED]
+    to: REJECTED
+    roles: [manager]
+    requires: [reason_code, reason] # reason_code: invalid | out_of_jurisdiction | insufficient_detail
+
+  - action: merge_duplicate
+    from: [SUBMITTED]
+    to: REJECTED
+    roles: [manager]
+    requires: [duplicate_of, reason]
+    guards: [duplicate_target_is_open]
+    effects: [link_duplicate]
+
+  - action: reroute
+    from: [TRIAGED, ASSIGNED]
+    to: SUBMITTED
+    roles: [dept_head]
+    requires: [reason]
+    guards: [is_department_head_of_request]
+    effects: [clear_department, clear_assignment, clear_resolution_sla, restart_triage_sla]
+
+  - action: assign
+    from: [TRIAGED, REOPENED]
+    to: ASSIGNED
+    roles: [dept_head, commissioner]
+    requires: [officer_id]
+    guards: [is_department_head_of_request_or_commissioner, officer_in_department, officer_covers_ward]
+
+  - action: reassign
+    from: [ASSIGNED, IN_PROGRESS]
+    to: ASSIGNED
+    roles: [dept_head, commissioner]
+    requires: [officer_id, reason]
+    guards:
+      [is_department_head_of_request_or_commissioner, officer_in_department, officer_covers_ward, different_officer]
+
+  - action: start
+    from: [ASSIGNED]
+    to: IN_PROGRESS
+    roles: [officer]
+    guards: [is_assigned_officer]
+
+  - action: request_info
+    from: [IN_PROGRESS]
+    to: NEEDS_INFO
+    roles: [officer]
+    requires: [question]
+    guards: [is_assigned_officer]
+    effects: [pause_sla, post_citizen_message]
+
+  - action: provide_info
+    from: [NEEDS_INFO]
+    to: IN_PROGRESS
+    roles: [citizen]
+    requires: [reply]
+    guards: [is_owner]
+    effects: [resume_sla, post_citizen_message]
+
+  - action: resolve
+    from: [IN_PROGRESS]
+    to: RESOLVED
+    roles: [officer]
+    requires: [resolution_note]
+    guards: [is_assigned_officer, has_proof_photo]
+    effects: [set_resolved_at]
+
+  - action: confirm
+    from: [RESOLVED]
+    to: CLOSED
+    roles: [citizen]
+    guards: [is_owner]
+    effects: [set_closed_at]
+
+  - action: reopen
+    from: [RESOLVED]
+    to: REOPENED
+    roles: [citizen]
+    requires: [reason]
+    guards: [is_owner, within_reopen_window]
+    effects: [fresh_resolution_sla, increment_reopen_count, clear_assignment]
+
+  - action: auto_close
+    from: [RESOLVED]
+    to: CLOSED
+    roles: [system]
+    guards: [resolved_longer_than_auto_close]
+    effects: [set_closed_at]
+
+sla:
+  triage_hours: 4
+  reopen_window_hours: 168
+  auto_close_hours: 72
+  warn_at: 0.75 # SLA badge turns "at risk"
+  escalation:
+    triage: # while SUBMITTED; Manager accountable
+      - { at: 1.0, level: 1, notify: commissioner }
+    resolution: # TRIAGED onward; Officer / Dept Head accountable
+      - { at: 1.0, level: 1, notify: dept_head }
+      - { at: 1.5, level: 2, notify: commissioner }
+
+departments:
+  WTR: { en: Water Supply, hi: जल आपूर्ति, mr: पाणीपुरवठा }
+  SWM: { en: Solid Waste Management, hi: ठोस अपशिष्ट प्रबंधन, mr: घनकचरा व्यवस्थापन }
+  RDS: { en: Roads, hi: सड़क विभाग, mr: रस्ते विभाग }
+  ELE: { en: Electrical, hi: विद्युत विभाग, mr: विद्युत विभाग }
+  SAN: { en: Sanitation & Drainage, hi: स्वच्छता व जल निकासी, mr: स्वच्छता व मलनिःसारण }
+  HLT: { en: Health, hi: स्वास्थ्य विभाग, mr: आरोग्य विभाग }
+
+categories:
+  drainage_overflow: { department: SAN, hours: 12, icon: waves }
+  water_leak: { department: WTR, hours: 24, icon: droplet }
+  no_water_supply: { department: WTR, hours: 24, icon: droplet-off }
+  garbage_not_collected: { department: SWM, hours: 24, icon: trash-2 }
+  streetlight_out: { department: ELE, hours: 48, icon: lightbulb-off }
+  stray_animals: { department: HLT, hours: 72, icon: dog }
+  pothole: { department: RDS, hours: 168, icon: construction }
+  other: { department: null, hours: 72, icon: circle-help } # manager must pick department_code at triage
