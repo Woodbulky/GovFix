@@ -1,16 +1,10 @@
 import type { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import layout from './layout/navnagar.json';
+import type { Pt } from './gen/geom';
+import { city } from './gen/layout';
 
-type Pt = [number, number];
-type Layout = {
-  bounds: { minX: number; maxX: number; minZ: number; maxZ: number };
-  wards: { id: number; name: Record<string, string>; polygon: Pt[] }[];
-  landmarks: { name: Record<string, string>; x: number; z: number }[];
-  river?: { points: Pt[]; width: number };
-};
-const city = layout as unknown as Layout;
 const { minX, maxX, minZ, maxZ } = city.bounds;
+const PARK: Record<string, string> = { garden: '#cfe3c0', ground: '#e8dcc4', forest: '#b9d1a6' };
 
 const centre = (poly: Pt[]) => poly.reduce(([ax, az], [x, z]) => [ax + x / poly.length, az + z / poly.length], [0, 0]);
 
@@ -31,7 +25,7 @@ type Props = {
  */
 export function CityMap2D({ onPick, pins = [], tint = {}, className }: Props) {
   const { t, i18n } = useTranslation();
-  const lang = i18n.language;
+  const lang = i18n.language as 'en' | 'hi' | 'mr';
 
   const click = (e: MouseEvent<SVGSVGElement>) => {
     const svg = e.currentTarget;
@@ -48,7 +42,7 @@ export function CityMap2D({ onPick, pins = [], tint = {}, className }: Props) {
       role="img"
       aria-label={t('map.label')}
       className={className}
-      style={{ cursor: onPick ? 'crosshair' : undefined, background: 'var(--paper)' }}
+      style={{ cursor: onPick ? 'crosshair' : undefined, background: 'var(--paper)', overflow: 'hidden' }}
     >
       {city.wards.map((w) => (
         <g key={w.id}>
@@ -56,15 +50,34 @@ export function CityMap2D({ onPick, pins = [], tint = {}, className }: Props) {
           {tint[w.id] && <polygon points={w.polygon.join(' ')} fill="var(--sla-breach)" fillOpacity={tint[w.id]} />}
         </g>
       ))}
-      {city.river && (
+      {city.parks.map((p) => (
+        <polygon key={p.name} points={p.polygon.join(' ')} fill={PARK[p.kind]} />
+      ))}
+      <polygon points={city.lake.polygon.join(' ')} fill="var(--river)" fillOpacity={0.5} />
+      {city.roads.map((r) => (
         <polyline
-          points={city.river.points.join(' ')}
+          key={r.name}
+          points={r.points.join(' ')}
           fill="none"
-          stroke="var(--river)"
-          strokeOpacity={0.5}
-          strokeWidth={city.river.width}
+          stroke="#b9b4a8"
+          strokeWidth={r.type === 'arterial' ? 24 : r.type === 'main' ? 14 : 8}
+          strokeLinejoin="round"
         />
-      )}
+      ))}
+      <polyline
+        points={city.river.points.join(' ')}
+        fill="none"
+        stroke="var(--river)"
+        strokeOpacity={0.5}
+        strokeWidth={city.river.width}
+      />
+      <polyline
+        points={city.railway.points.join(' ')}
+        fill="none"
+        stroke="#4a4644"
+        strokeWidth={8}
+        strokeDasharray="30 20"
+      />
       {city.wards.map((w) => {
         const [x, z] = centre(w.polygon);
         return (

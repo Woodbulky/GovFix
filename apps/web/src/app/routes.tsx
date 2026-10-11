@@ -46,7 +46,7 @@ import { Overview } from '@/features/admin/Overview';
 import { TimeMachine } from '@/features/admin/TimeMachine';
 import { Users as UsersPage } from '@/features/admin/Users';
 import { WorkflowSla } from '@/features/admin/WorkflowSla';
-import { Soon } from './pages';
+import { CityExplorer } from '@/features/city/CityExplorer';
 
 export type AppRoute = {
   path: string;
@@ -60,13 +60,11 @@ export type AppRoute = {
 };
 
 const STAFF: Role[] = ['officer', 'dept_head', 'manager', 'commissioner'];
-const soon = (key: string, phase: string) => <Soon titleKey={`nav.${key}`} phase={phase} />;
 
-// ponytail: placeholder screens; P8 (city) swaps in the real element.
 export const ROUTES: AppRoute[] = [
   // Public, also reachable when signed in
   { path: '/', key: 'home', icon: House, access: 'anyone', element: <PublicHome /> },
-  { path: '/explore', key: 'explore', icon: MapIcon, access: 'anyone', element: soon('explore', 'P8') },
+  { path: '/explore', key: 'explore', icon: MapIcon, access: 'anyone', element: <CityExplorer /> },
   { path: '/track', key: 'track', icon: Search, access: 'anyone', element: <TrackPage /> },
   { path: '/departments', key: 'departments', icon: Building2, access: 'anyone', element: <DepartmentsPage /> },
   { path: '/login', key: 'login', icon: User, access: 'anyone', element: <LoginPage /> },

@@ -1,7 +1,7 @@
 import { Leaf } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/Toaster';
 import { useAuth } from '@/features/auth/store';
 import { useNotifications } from '@/features/citizen/hooks';
@@ -77,10 +77,14 @@ function SkipLink() {
   );
 }
 
+/** The city explorer is full bleed: no page padding or max width (DESIGN.md). */
+const useBleed = () => useLocation().pathname === '/explore';
+
 /** Public and citizen screens: top bar, single column. */
 function TopBarLayout() {
+  const bleed = useBleed();
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SkipLink />
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3 px-4 py-2">
@@ -91,7 +95,7 @@ function TopBarLayout() {
           <Nav dark={false} vertical={false} />
         </div>
       </header>
-      <main id="main" className="mx-auto max-w-[880px] p-4">
+      <main id="main" className={bleed ? 'relative flex-1' : 'mx-auto w-full max-w-[880px] p-4'}>
         <Outlet />
       </main>
     </div>
@@ -100,6 +104,7 @@ function TopBarLayout() {
 
 /** Staff screens: 240 px canopy sidebar (a strip under the header on small screens). */
 function StaffLayout() {
+  const bleed = useBleed();
   // Idempotent; covers venues where pg_cron is late or unavailable (WORKFLOW.md).
   useEffect(() => {
     const id = setInterval(() => void rpc('run_escalation_sweep', {}).catch(() => {}), 30_000);
@@ -112,7 +117,7 @@ function StaffLayout() {
         <Logo dark />
         <Nav dark vertical />
       </aside>
-      <div className="min-w-0 flex-1">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <header className="flex flex-wrap items-center justify-end gap-3 border-b border-line bg-surface px-4 py-2">
           <div className="mr-auto md:hidden">
             <Logo dark={false} />
@@ -122,7 +127,7 @@ function StaffLayout() {
         <div className="bg-canopy px-2 py-1 md:hidden">
           <Nav dark vertical={false} />
         </div>
-        <main id="main" className="mx-auto max-w-[1440px] p-4">
+        <main id="main" className={bleed ? 'relative flex-1' : 'mx-auto w-full max-w-[1440px] p-4'}>
           <Outlet />
         </main>
       </div>
