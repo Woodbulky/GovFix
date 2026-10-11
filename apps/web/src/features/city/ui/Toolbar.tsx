@@ -10,7 +10,7 @@ const MODES: { mode: Mode; icon: typeof Eye }[] = [
   { mode: 'fly', icon: Plane },
   { mode: 'walk', icon: Footprints },
 ];
-const LAYERS: LayerKey[] = ['wards', 'labels', 'traffic', 'followSim'];
+const LAYERS: LayerKey[] = ['complaints', 'props', 'heat', 'wards', 'labels', 'traffic', 'followSim'];
 const btn =
   'inline-flex min-h-[var(--touch)] min-w-[var(--touch)] items-center justify-center gap-1.5 rounded-sm px-3 font-semibold';
 

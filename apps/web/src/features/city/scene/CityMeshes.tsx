@@ -78,8 +78,39 @@ export function useCityObjects(data: CityData) {
   }, [data]);
 }
 
-export function CityMeshes({ data, showWards }: { data: CityData; showWards: boolean }) {
+const hidden = new THREE.Matrix4().makeScale(0, 0, 0);
+
+export function CityMeshes({
+  data,
+  showWards,
+  darkLights = [],
+}: {
+  data: CityData;
+  showWards: boolean;
+  darkLights?: number[];
+}) {
   const objects = useCityObjects(data);
+  const lamps = objects.instances[9];
+  const darkKey = darkLights.join(',');
+  // A streetlight_out complaint hides that lamp head; IssueProps draws an unlit one in its place.
+  useEffect(() => {
+    if (!darkLights.length) return;
+    const l = data.instances.lights;
+    for (const i of darkLights) lamps.setMatrixAt(i, hidden);
+    lamps.instanceMatrix.needsUpdate = true;
+    return () => {
+      for (const i of darkLights) {
+        dummy.position.set(l[i * 4], l[i * 4 + 1], l[i * 4 + 2]);
+        dummy.rotation.set(0, l[i * 4 + 3], 0);
+        dummy.scale.set(1, 1, 1);
+        dummy.updateMatrix();
+        lamps.setMatrixAt(i, dummy.matrix);
+      }
+      lamps.instanceMatrix.needsUpdate = true;
+    };
+    // darkKey stands for the list's contents.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lamps, darkKey, data]);
   useEffect(
     () => () => {
       // Geometries made from worker data belong to this mount; shared unit geometries and materials stay cached.

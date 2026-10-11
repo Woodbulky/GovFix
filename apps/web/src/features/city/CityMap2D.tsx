@@ -8,7 +8,7 @@ const PARK: Record<string, string> = { garden: '#cfe3c0', ground: '#e8dcc4', for
 
 const centre = (poly: Pt[]) => poly.reduce(([ax, az], [x, z]) => [ax + x / poly.length, az + z / poly.length], [0, 0]);
 
-export type MapPin = { x: number; z: number; label?: string };
+export type MapPin = { x: number; z: number; label?: string; color?: string; onSelect?: () => void };
 
 type Props = {
   /** Called with city metres (x east, z south) when the user clicks the map. */
@@ -39,7 +39,7 @@ export function CityMap2D({ onPick, pins = [], tint = {}, className }: Props) {
     <svg
       viewBox={`${minX} ${minZ} ${maxX - minX} ${maxZ - minZ}`}
       onClick={click}
-      role="img"
+      role={pins.some((p) => p.onSelect) ? 'group' : 'img'}
       aria-label={t('map.label')}
       className={className}
       style={{ cursor: onPick ? 'crosshair' : undefined, background: 'var(--paper)', overflow: 'hidden' }}
@@ -95,8 +95,31 @@ export function CityMap2D({ onPick, pins = [], tint = {}, className }: Props) {
         </g>
       ))}
       {pins.map((p, i) => (
-        <g key={i} transform={`translate(${p.x} ${p.z})`}>
-          <path d="M0 0 L-28 -60 A32 32 0 1 1 28 -60 Z" fill="var(--marigold)" stroke="var(--canopy)" strokeWidth={6} />
+        <g
+          key={i}
+          transform={`translate(${p.x} ${p.z})`}
+          role={p.onSelect ? 'button' : undefined}
+          tabIndex={p.onSelect ? 0 : undefined}
+          aria-label={p.onSelect ? p.label : undefined}
+          onClick={(e) => {
+            if (!p.onSelect) return;
+            e.stopPropagation();
+            p.onSelect();
+          }}
+          onKeyDown={(e) => {
+            if (p.onSelect && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              p.onSelect();
+            }
+          }}
+          style={{ cursor: p.onSelect ? 'pointer' : undefined }}
+        >
+          <path
+            d="M0 0 L-28 -60 A32 32 0 1 1 28 -60 Z"
+            fill={p.color ?? 'var(--marigold)'}
+            stroke="var(--canopy)"
+            strokeWidth={6}
+          />
           <circle cy={-78} r={11} fill="var(--canopy)" />
           {p.label && <title>{p.label}</title>}
         </g>

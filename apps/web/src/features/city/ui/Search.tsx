@@ -1,16 +1,26 @@
-// Top-left search: landmarks (names and aliases in every script) and wards. Tickets join in P8b.
+// Top-left search: tickets the viewer may see, landmarks (names and aliases in every script) and wards.
 import { Search as SearchIcon } from 'lucide-react';
 import { useId, useMemo, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { centroid } from '../gen/geom';
 import { city, wardAt } from '../gen/layout';
+import type { Marker } from '../markers/data';
 import { useCity } from '../store';
 
-type Hit = { id: string; label: string; sub: string; keys: string[]; x: number; z: number; distance: number };
+type Hit = {
+  id: string;
+  label: string;
+  sub: string;
+  keys: string[];
+  x: number;
+  z: number;
+  distance: number;
+  marker?: Marker;
+};
 
 const norm = (s: string) => s.toLowerCase().normalize('NFC').replace(/\s+/g, ' ').trim();
 
-export function Search() {
+export function Search({ markers = [], onMarker }: { markers?: Marker[]; onMarker?: (m: Marker) => void }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'en' | 'hi' | 'mr';
   const flyTo = useCity((s) => s.flyTo);
@@ -22,6 +32,19 @@ export function Search() {
   const all = useMemo<Hit[]>(() => {
     const ward = (n: number) => city.wards.find((w) => w.id === n);
     return [
+      ...markers
+        .filter((m) => m.ticket)
+        .map((m) => ({
+          id: `t${m.key}`,
+          label: m.ticket!,
+          sub: `${t(`state.${m.state}`)} · ${t('city.wardN', { n: m.ward_id })}`,
+          // "142", "000142" and the full ticket all match.
+          keys: [norm(m.ticket!), m.ticket!.slice(-6), String(Number(m.ticket!.slice(-6)))],
+          x: m.x,
+          z: m.z,
+          distance: 160,
+          marker: m,
+        })),
       ...city.landmarks.map((l, i) => {
         const w = wardAt(l.x, l.z);
         return {
@@ -49,7 +72,7 @@ export function Search() {
         };
       }),
     ];
-  }, [lang, t]);
+  }, [lang, t, markers]);
 
   const query = norm(q);
   const hits = query
@@ -62,6 +85,12 @@ export function Search() {
     : [];
 
   const go = (h: Hit) => {
+    if (h.marker && onMarker) {
+      onMarker(h.marker);
+      setQ(h.label);
+      setOpen(false);
+      return;
+    }
     flyTo({ x: h.x, z: h.z, distance: h.distance, label: t('city.showing', { place: h.label }) });
     setQ(h.label);
     setOpen(false);

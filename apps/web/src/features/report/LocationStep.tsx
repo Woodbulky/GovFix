@@ -1,7 +1,9 @@
 import { MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CityMap2D } from '@/features/city/CityMap2D';
+import { CityPicker } from '@/features/city/CityPicker';
+import { pickRefusal } from '@/features/city/markers/data';
+import { useCity } from '@/features/city/store';
 import { nameOf, useLandmarks, useWards } from '@/lib/reference';
 import { rpc } from '@/lib/rpc';
 
@@ -10,7 +12,7 @@ export const NO_PLACE: Place = { ward_id: null, landmark_id: null, x: null, z: n
 
 type Located =
   | { found: true; ward_id: number; landmark: { id: number; distance_m: number } | null }
-  | { found: false; message: string };
+  | { found: false; reason?: 'outside' | 'river'; message: string };
 
 const select = 'mt-1 block min-h-12 w-full rounded-md border border-line bg-surface px-3';
 
@@ -32,29 +34,39 @@ export function LocationStep({ place, onChange }: { place: Place; onChange: (p: 
   const label = usePlaceLabel(place);
 
   const pick = async (x: number, z: number) => {
+    // Same rule as locate_point() in SQL, answered at once; the database still has the last word.
+    const local = pickRefusal(x, z);
+    if (local) return setError(t(local === 'river' ? 'place.river' : 'place.outside'));
     const r = (await rpc('locate_point', { p_x: x, p_z: z })) as Located;
-    if (!r.found) return setError(t('place.outside'));
+    if (!r.found) return setError(t(r.reason === 'river' ? 'place.river' : 'place.outside'));
     setError('');
     onChange({ ward_id: r.ward_id, landmark_id: r.landmark?.id ?? null, x, z });
   };
 
+  // Choosing from the lists moves the 3D picker's camera to the new pin.
+  const show = (x: number, z: number, distance: number) => useCity.getState().flyTo({ x, z, distance, label: '' });
   const pickWard = (id: number) => {
     const w = wards?.find((x) => x.id === id);
     onChange(w ? { ward_id: w.id, landmark_id: null, x: w.center_x, z: w.center_z } : NO_PLACE);
+    if (w) show(w.center_x, w.center_z, 900);
+    setError('');
   };
   const pickLandmark = (id: number) => {
     const l = landmarks?.find((x) => x.id === id);
-    if (l) onChange({ ward_id: l.ward_id, landmark_id: l.id, x: l.x, z: l.z });
-    else onChange({ ...place, landmark_id: null });
+    if (l) {
+      onChange({ ward_id: l.ward_id, landmark_id: l.id, x: l.x, z: l.z });
+      show(l.x, l.z, 300);
+      setError('');
+    } else onChange({ ...place, landmark_id: null });
   };
 
   return (
     <div className="space-y-4">
       <p>{t('report.mapHint')}</p>
-      <CityMap2D
+      <CityPicker
         onPick={(x, z) => void pick(x, z)}
-        pins={place.x !== null && place.z !== null ? [{ x: place.x, z: place.z, label }] : []}
-        className="aspect-square w-full max-w-[560px] rounded-lg border border-line"
+        pin={place.x !== null && place.z !== null ? { x: place.x, z: place.z } : null}
+        label={label}
       />
       <p aria-live="polite" className="flex items-center gap-2 font-medium">
         {label && (

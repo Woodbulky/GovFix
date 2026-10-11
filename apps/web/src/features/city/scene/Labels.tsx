@@ -14,7 +14,8 @@ const WARDS = city.wards.map((w) => {
 
 const chip = 'pointer-events-none whitespace-nowrap rounded-full px-2.5 py-0.5 text-sm font-semibold shadow';
 
-export function Labels() {
+/** `breach`: past-deadline counts per ward, shown on the ward labels while the heat layer is on. */
+export function Labels({ breach }: { breach?: Record<number, number> }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'en' | 'hi' | 'mr';
   const landmarkEls = useRef<(HTMLDivElement | null)[]>([]);
@@ -37,16 +38,23 @@ export function Labels() {
   return (
     <group>
       {city.landmarks.map((l, i) => (
-        <Html key={l.name.en} position={[l.x, heightAt(l.x, l.z) + 26, l.z]} center zIndexRange={[20, 0]}>
+        <Html
+          key={l.name.en}
+          position={[l.x, heightAt(l.x, l.z) + 26, l.z]}
+          center
+          zIndexRange={[20, 0]}
+          style={{ pointerEvents: 'none' }}
+        >
           <div ref={(el) => void (landmarkEls.current[i] = el)} aria-hidden className={`${chip} bg-surface text-ink`}>
             {l.name[lang] ?? l.name.en}
           </div>
         </Html>
       ))}
       {WARDS.map((w, i) => (
-        <Html key={w.id} position={[w.x, 60, w.z]} center zIndexRange={[20, 0]}>
+        <Html key={w.id} position={[w.x, 60, w.z]} center zIndexRange={[20, 0]} style={{ pointerEvents: 'none' }}>
           <div ref={(el) => void (wardEls.current[i] = el)} aria-hidden className={`${chip} bg-canopy text-white`}>
             {t('city.wardN', { n: w.id })} · {w.name[lang] ?? w.name.en}
+            {breach?.[w.id] ? ` · ${t('city.clusterPast', { n: breach[w.id] })}` : ''}
           </div>
         </Html>
       ))}

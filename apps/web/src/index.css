@@ -80,6 +80,28 @@ h4 {
   outline-offset: 2px;
 }
 
+/* City pins (features/city/markers): drop in on the home hero, past-deadline pins pulse. Off under reduced motion. */
+@keyframes city-pin-drop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -160%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+}
+@keyframes city-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

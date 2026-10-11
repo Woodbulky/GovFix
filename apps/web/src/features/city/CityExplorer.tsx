@@ -1,71 +1,32 @@
 // Explore Navnagar: full-bleed 3D city with overlays at the corners, or the 2D map when WebGL is off.
-import { Component, lazy, Suspense, useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
+import { SLA_STYLE } from '@/components/SlaBadge';
+import { useAuth } from '@/features/auth/store';
 import { useSimNow } from '@/lib/queries';
 import { CityMap2D } from './CityMap2D';
+import { Fallback, hasWebGL, store, stored, useReducedMotion } from './env';
 import { overviewKey } from './controls/keys';
 import type { CityData } from './gen/city';
 import { loadCity } from './gen/load';
+import { applyFilter, breachByWard, type Cluster, clusterByWard, type Marker } from './markers/data';
+import { NoticeBoard, PinLayer, useMarkerText } from './markers/PinLayer';
 import { useCity } from './store';
 import { DAY, sunAt } from './sun';
 import { Help, Legend } from './ui/Legend';
 import { Minimap } from './ui/Minimap';
+import { Complaints } from './ui/Complaints';
+import { PinDrawer } from './ui/PinDrawer';
 import { Search } from './ui/Search';
+import { useCityMarkers } from './useCityData';
 import { Toolbar } from './ui/Toolbar';
 import { Stats } from './ui/Stats';
 
 const CityCanvas = lazy(() => import('./scene/CityCanvas'));
 
-const stored = (k: string) => {
-  try {
-    return localStorage.getItem(k);
-  } catch {
-    return null;
-  }
-};
-const store = (k: string, v: string) => {
-  try {
-    localStorage.setItem(k, v);
-  } catch {
-    /* private mode: not remembered */
-  }
-};
-
-function hasWebGL() {
-  try {
-    const c = document.createElement('canvas');
-    return !!(c.getContext('webgl2') ?? c.getContext('webgl'));
-  } catch {
-    return false;
-  }
-}
-
-function useReducedMotion() {
-  const q = '(prefers-reduced-motion: reduce)';
-  const [reduced, setReduced] = useState(() => window.matchMedia?.(q).matches ?? false);
-  useEffect(() => {
-    const m = window.matchMedia?.(q);
-    if (!m) return;
-    const on = () => setReduced(m.matches);
-    m.addEventListener('change', on);
-    return () => m.removeEventListener('change', on);
-  }, []);
-  return reduced;
-}
-
-/** WebGL context loss or a shader error drops to the 2D map instead of a blank page. */
-class Fallback extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  componentDidCatch() {
-    this.props.onError();
-  }
-  render() {
-    return this.state.failed ? null : this.props.children;
-  }
-}
+/** Farther than this (camera to the point it looks at) the overview shows one count bubble per ward. */
+const CLUSTER_DISTANCE = 1600;
 
 export function CityExplorer() {
   const { t } = useTranslation();
@@ -75,7 +36,19 @@ export function CityExplorer() {
   const [data, setData] = useState<CityData | null>(null);
   const [help, setHelp] = useState(() => stored('city-help-seen') !== '1');
   const reducedMotion = useReducedMotion();
-  const { mode, locked, layers, announcement, setMode } = useCity();
+  const { mode, locked, layers, announcement, setMode, filter, selected, select, flyTo } = useCity();
+  const role = useAuth((s) => s.profile?.role);
+  const staff = !!role && role !== 'citizen';
+  const { markers, full, ready } = useCityMarkers();
+  const shown = useMemo(
+    () => (layers.complaints ? applyFilter(markers, filter) : []),
+    [markers, filter, layers.complaints],
+  );
+  const breach = useMemo(() => breachByWard(shown), [shown]);
+  const zoomedOut = useCity((s) => s.mode === 'overview' && s.cam.distance > CLUSTER_DISTANCE);
+  const clusters = useMemo(() => (zoomedOut ? clusterByWard(shown) : null), [zoomedOut, shown]);
+  const sel = selected ? (shown.find((m) => m.key === selected) ?? markers.find((m) => m.key === selected)) : undefined;
+  const text = useMarkerText();
   const simNow = useSimNow();
   const minute = Math.floor(simNow.getTime() / 60_000);
   const sun = useMemo(() => (layers.followSim ? sunAt(new Date(minute * 60_000)) : DAY), [minute, layers.followSim]);
@@ -95,6 +68,38 @@ export function CityExplorer() {
 
   // Leaving the page always returns to overview, so the next visit starts on the map.
   useEffect(() => () => setMode('overview'), [setMode]);
+  useEffect(() => () => select(null), [select]);
+
+  // Role defaults (PRD): an officer starts on their own requests, a Dept Head with the per-ward heat.
+  // A filter NIVA already set before opening the city wins.
+  const defaulted = useRef(false);
+  useEffect(() => {
+    if (defaulted.current || !role) return;
+    defaulted.current = true;
+    const s = useCity.getState();
+    if (role === 'officer' && !Object.keys(s.filter).length) s.setFilter({ mine: true });
+    if (role === 'dept_head') s.setLayer('heat', true);
+  }, [role]);
+
+  const openMarker = useCallback(
+    (m: Marker) => {
+      flyTo({ x: m.x, z: m.z, distance: 160, label: t('city.showing', { place: text(m).label }) });
+      select(m.key);
+    },
+    [flyTo, select, t, text],
+  );
+  const openCluster = (c: Cluster) =>
+    flyTo({ x: c.x, z: c.z, distance: 650, label: t('city.showing', { place: t('city.wardN', { n: c.ward_id }) }) });
+
+  // /explore?ticket=NMC-2026-000142 opens that request (links from detail pages and NIVA's fly_to).
+  const [params, setParams] = useSearchParams();
+  const ticket = params.get('ticket');
+  useEffect(() => {
+    if (!ticket || !ready) return;
+    const m = markers.find((x) => x.ticket === ticket);
+    if (m) openMarker(m);
+    setParams((p) => (p.delete('ticket'), p), { replace: true });
+  }, [ticket, ready, markers, openMarker, setParams]);
 
   const toggleLite = (on: boolean) => {
     setLite(on);
@@ -127,7 +132,18 @@ export function CityExplorer() {
           )}
         </div>
         {(!webgl || failed) && <p className="text-ink-muted">{t(webgl ? 'city.loadFailed' : 'city.noWebgl')}</p>}
-        <CityMap2D className="mx-auto h-auto w-full max-w-[880px] rounded-md border border-line" />
+        <Complaints shown={shown} total={markers.length} signedIn={full} staff={staff} onOpen={(m) => select(m.key)} />
+        <CityMap2D
+          pins={shown.map((m) => ({
+            x: m.x,
+            z: m.z,
+            label: text(m).label,
+            color: (SLA_STYLE[m.sla] ?? SLA_STYLE.untriaged)[1],
+            onSelect: () => select(m.key),
+          }))}
+          className="mx-auto h-auto w-full max-w-[880px] rounded-md border border-line"
+        />
+        {sel && <PinDrawer marker={sel} onClose={() => select(null)} />}
       </div>
     );
   }
@@ -141,12 +157,12 @@ export function CityExplorer() {
         aria-label={t('city.canvasLabel')}
         tabIndex={0}
         onKeyDown={onKey}
-        className="absolute inset-0 focus-visible:outline-offset-[-4px]"
+        className="absolute inset-0 z-0 focus-visible:outline-offset-[-4px]"
       >
         {data ? (
           <Fallback onError={() => setFailed(true)}>
             <Suspense fallback={null}>
-              <CityCanvas data={data} sun={sun} reducedMotion={reducedMotion} />
+              <CityCanvas data={data} sun={sun} reducedMotion={reducedMotion} markers={shown} breach={breach} />
             </Suspense>
           </Fallback>
         ) : (
@@ -156,8 +172,22 @@ export function CityExplorer() {
         )}
       </div>
 
+      {data && (
+        <PinLayer
+          markers={shown}
+          clusters={clusters}
+          selected={selected}
+          onSelect={openMarker}
+          onCluster={openCluster}
+        />
+      )}
+      {data && mode === 'walk' && <WalkBoards markers={shown} />}
+
       <div className="pointer-events-none absolute inset-x-4 top-4 z-30 flex flex-wrap items-start justify-between gap-2 [&>*]:pointer-events-auto">
-        <Search />
+        <div className="flex flex-col gap-2">
+          <Search markers={shown} onMarker={openMarker} />
+          <Complaints shown={shown} total={markers.length} signedIn={full} staff={staff} onOpen={openMarker} />
+        </div>
         <Toolbar onLite={() => toggleLite(true)} onHelp={() => setHelp((h) => !h)} />
       </div>
 
@@ -165,11 +195,15 @@ export function CityExplorer() {
         {help ? <Help onClose={closeHelp} /> : <Legend />}
       </div>
 
-      <div
-        className={`pointer-events-none absolute bottom-4 right-4 z-30 [&>*]:pointer-events-auto ${help ? 'hidden sm:block' : ''}`}
-      >
-        <Minimap />
-      </div>
+      {sel ? (
+        <PinDrawer marker={sel} onClose={() => select(null)} />
+      ) : (
+        <div
+          className={`pointer-events-none absolute bottom-4 right-4 z-30 [&>*]:pointer-events-auto ${help ? 'hidden sm:block' : ''}`}
+        >
+          <Minimap />
+        </div>
+      )}
 
       {mode !== 'overview' && !locked && (
         <p className="pointer-events-none absolute bottom-24 left-1/2 z-30 w-[min(520px,calc(100%-2rem))] -translate-x-1/2 rounded-md bg-canopy px-4 py-2 text-center text-sm text-white sm:bottom-6">
@@ -185,4 +219,23 @@ export function CityExplorer() {
       <Stats />
     </div>
   );
+}
+
+/** Walk mode: the nearest complaint with a photo within 25 m hangs it on a notice board at the spot. */
+function WalkBoards({ markers }: { markers: Marker[] }) {
+  const withPhotos = useMemo(() => markers.filter((m) => m.photos.some((p) => p.kind === 'report')), [markers]);
+  const near = useCity((s) => {
+    let best: string | null = null;
+    let bestD = 25;
+    for (const m of withPhotos) {
+      const d = Math.hypot(m.x - s.cam.x, m.z - s.cam.z);
+      if (d < bestD) {
+        bestD = d;
+        best = m.key;
+      }
+    }
+    return best;
+  });
+  const m = withPhotos.find((x) => x.key === near);
+  return m ? <NoticeBoard m={m} /> : null;
 }

@@ -123,7 +123,8 @@
     "network": "Couldn't reach the server. Check your connection and try again."
   },
   "home": {
-    "categories": "What can you report?"
+    "categories": "What can you report?",
+    "exploreCity": "Explore the city"
   },
   "how": {
     "title": "How it works",
@@ -176,7 +177,8 @@
   "place": {
     "ward": "Ward {{n}} {{name}}",
     "near": "Near {{landmark}}, {{ward}}",
-    "outside": "That spot is outside Navnagar. Pick a point inside the city."
+    "outside": "That spot is outside Navnagar. Pick a point inside the city.",
+    "river": "That spot is in the river. Pick a point on land or on a bridge."
   },
   "map": {
     "label": "Map of Navnagar"
@@ -586,10 +588,13 @@
       "wards": "Ward boundaries",
       "labels": "Place names",
       "traffic": "Traffic and birds",
-      "followSim": "Day and night follow sim time"
+      "followSim": "Day and night follow sim time",
+      "complaints": "Complaints",
+      "props": "Problems in the street",
+      "heat": "Past deadline by ward"
     },
-    "searchLabel": "Find a landmark or ward",
-    "searchPlaceholder": "Landmark or ward",
+    "searchLabel": "Find a ticket, landmark or ward",
+    "searchPlaceholder": "Ticket, landmark or ward",
     "searchNone": "No match. Try a landmark or ward name.",
     "wardN": "Ward {{n}}",
     "showing": "Showing {{place}}",
@@ -612,8 +617,55 @@
       "river": "Navnadi river",
       "rail": "Railway",
       "road": "Main road",
-      "landmark": "Landmark name"
+      "landmark": "Landmark name",
+      "escalated": "Escalated",
+      "mine": "Yours"
     },
-    "stats": "{{fps}} fps · {{calls}} draw calls · {{tris}}k triangles"
+    "stats": "{{fps}} fps · {{calls}} draw calls · {{tris}}k triangles",
+    "complaints": "Complaints on the map",
+    "shownAll": "Complaints: {{n}}",
+    "shownOf": "Complaints: {{n}} of {{total}}",
+    "noneShown": "No complaints match this filter.",
+    "clearFilter": "Clear filter",
+    "nextDeadline": "Next by deadline",
+    "cluster": "{{ward}}: {{n}} complaints, {{breached}} past deadline",
+    "clusterPast": "{{n}} past deadline",
+    "photoOf": "Photo reported with {{ticket}}",
+    "proofOf": "Proof photo for {{ticket}}",
+    "prevPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "pin": {
+      "unknown": "Complaint",
+      "yours": "Yours",
+      "age": "{{dur}} old",
+      "private": "Details and photos are shown only to the person who reported it and to NMC staff.",
+      "openMine": "Open my complaint",
+      "openRequest": "Open request",
+      "reportPhoto": "Reported photo",
+      "proofPhoto": "Proof of fix"
+    },
+    "filter": {
+      "status": "Show",
+      "all": "All",
+      "open": "Open",
+      "past_deadline": "Past deadline",
+      "resolved": "Resolved",
+      "category": "Category",
+      "anyCategory": "Any category",
+      "ward": "Ward {{n}} only.",
+      "anyWard": "Show every ward",
+      "mine": "Only my complaints",
+      "mineStaff": "Only requests assigned to me"
+    },
+    "picker": {
+      "label": "3D map of Navnagar. Click the spot of the problem.",
+      "hint": "Click the spot where the problem is.",
+      "drag": "Drag the pin to adjust, or click somewhere else.",
+      "use2d": "Use the 2D map instead",
+      "use3d": "Use the 3D city"
+    },
+    "tool": {
+      "notFound": "No matching place or visible ticket"
+    }
   }
 }

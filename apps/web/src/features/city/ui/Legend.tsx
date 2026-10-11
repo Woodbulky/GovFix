@@ -1,14 +1,40 @@
 // Bottom-left: map key and the controls help shown on first use.
-import { X } from 'lucide-react';
+import { CircleArrowUp, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { SLA_STYLE, type SlaStatus } from '@/components/SlaBadge';
 
 const swatch = (style: React.CSSProperties) => (
   <span aria-hidden className="inline-block h-1.5 w-6 rounded-full" style={style} />
 );
 
+const PIN_KEYS: SlaStatus[] = ['untriaged', 'on_track', 'at_risk', 'breached', 'paused', 'done'];
+
 export function Legend() {
   const { t } = useTranslation();
+  const pins: [React.ReactNode, string][] = PIN_KEYS.map((s) => {
+    const [Icon, color] = SLA_STYLE[s];
+    return [
+      <span
+        aria-hidden
+        className="grid h-6 w-6 place-items-center rounded-full border-2 bg-surface"
+        style={{ borderColor: color, color }}
+      >
+        <Icon size={14} />
+      </span>,
+      t(`sla.${s === 'paused' ? 'paused_staff' : s}`),
+    ];
+  });
   const rows: [React.ReactNode, string][] = [
+    ...pins,
+    [<CircleArrowUp aria-hidden size={20} style={{ color: 'var(--sla-risk)' }} />, t('city.legend.escalated')],
+    [
+      <span
+        aria-hidden
+        className="inline-block h-6 w-6 rounded-full border-2 border-line"
+        style={{ outline: '3px solid var(--marigold)' }}
+      />,
+      t('city.legend.mine'),
+    ],
     [swatch({ background: 'var(--marigold)' }), t('city.legend.ward')],
     [swatch({ background: 'var(--river)', height: 8 }), t('city.legend.river')],
     [
@@ -28,7 +54,7 @@ export function Legend() {
       <h2 id="city-legend" className="text-base">
         {t('city.legend.title')}
       </h2>
-      <ul className="mt-1 space-y-1 text-sm">
+      <ul className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
         {rows.map(([icon, label]) => (
           <li key={label} className="flex items-center gap-2">
             {icon}

@@ -122,12 +122,20 @@ export function CamTracker() {
   const mode = useCity((s) => s.mode);
   const last = useRef(0);
   const dir = useRef(new THREE.Vector3());
-  useFrame(({ camera, clock }) => {
-    if (clock.elapsedTime - last.current < 0.2) return;
-    last.current = clock.elapsedTime;
+  // Wall clock, not r3f's: its clock restarts at 0 whenever the frameloop switches between always and demand.
+  useFrame(({ camera }) => {
+    const now = performance.now();
+    if (now - last.current < 200) return;
+    last.current = now;
     camera.getWorldDirection(dir.current);
     const at = mode === 'overview' ? lookPoint(camera) : camera.position;
-    setCam({ x: at.x, z: at.z, heading: Math.atan2(dir.current.x, -dir.current.z), height: camera.position.y });
+    setCam({
+      x: at.x,
+      z: at.z,
+      heading: Math.atan2(dir.current.x, -dir.current.z),
+      height: camera.position.y,
+      distance: camera.position.distanceTo(at),
+    });
   });
   return null;
 }

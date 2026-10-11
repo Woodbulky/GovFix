@@ -6,6 +6,8 @@ import { arr, q } from './sql';
 type Pt = [number, number];
 type Names = { en: string; hi: string; mr: string };
 type Layout = {
+  river: { width: number; points: Pt[] };
+  roads: { type: 'arterial' | 'main' | 'lane'; points: Pt[] }[];
   wards: { id: number; name: Names; polygon: Pt[] }[];
   landmarks: { name: Names; aliases?: string[]; x: number; z: number }[];
 };
@@ -72,6 +74,16 @@ out.push(
   'on conflict (id) do update set ward_id = excluded.ward_id, name_en = excluded.name_en, name_hi = excluded.name_hi,',
   '  name_mr = excluded.name_mr, aliases = excluded.aliases, x = excluded.x, z = excluded.z;',
   "select setval('landmarks_id_seq', (select max(id) from landmarks));",
+  '',
+);
+
+// River and the roads that carry people over it, so locate_point() refuses open water but not a bridge.
+const HALF = { arterial: 13, main: 8 }; // half road width (24 m, 14 m) + 1 m
+const decks = city.roads.flatMap((r) => (r.type === 'lane' ? [] : [{ points: r.points, half: HALF[r.type] }]));
+out.push(
+  'insert into city_water (id, river, river_width, decks) values',
+  `  (1, ${q(JSON.stringify(city.river.points))}::jsonb, ${city.river.width}, ${q(JSON.stringify(decks))}::jsonb)`,
+  'on conflict (id) do update set river = excluded.river, river_width = excluded.river_width, decks = excluded.decks;',
   '',
 );
 

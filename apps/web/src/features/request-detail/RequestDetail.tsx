@@ -91,7 +91,8 @@ function Complaint({ r }: { r: StaffRequest }) {
   );
 }
 
-function Work({ r, messages }: { r: StaffRequest; messages: RequestBundle['messages'] }) {
+/** Status, stepper, SLA clock, role-valid actions and messages. Also the city pin drawer (P8b). */
+export function Work({ r, messages }: { r: StaffRequest; messages: RequestBundle['messages'] }) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState<string | null>(null);
   const { act, run, busy } = useStaffAct();
