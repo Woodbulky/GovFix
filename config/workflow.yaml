@@ -136,11 +136,22 @@ departments:
   HLT: { en: Health, hi: स्वास्थ्य विभाग, mr: आरोग्य विभाग }
 
 categories:
-  drainage_overflow: { department: SAN, hours: 12, icon: waves }
-  water_leak: { department: WTR, hours: 24, icon: droplet }
-  no_water_supply: { department: WTR, hours: 24, icon: droplet-off }
-  garbage_not_collected: { department: SWM, hours: 24, icon: trash-2 }
-  streetlight_out: { department: ELE, hours: 48, icon: lightbulb-off }
-  stray_animals: { department: HLT, hours: 72, icon: dog }
-  pothole: { department: RDS, hours: 168, icon: construction }
-  other: { department: null, hours: 72, icon: circle-help } # manager must pick department_code at triage
+  drainage_overflow:
+    { en: Drainage overflow, hi: नाली ओवरफ्लो, mr: गटार तुंबले, department: SAN, hours: 12, icon: waves }
+  water_leak: { en: Water leak, hi: पानी का रिसाव, mr: पाणी गळती, department: WTR, hours: 24, icon: droplet }
+  no_water_supply:
+    { en: No water supply, hi: पानी नहीं आ रहा, mr: पाणीपुरवठा बंद, department: WTR, hours: 24, icon: droplet-off }
+  garbage_not_collected:
+    { en: Garbage not collected, hi: कचरा नहीं उठाया, mr: कचरा उचलला नाही, department: SWM, hours: 24, icon: trash-2 }
+  streetlight_out:
+    {
+      en: Streetlight not working,
+      hi: स्ट्रीटलाइट बंद,
+      mr: पथदिवा बंद,
+      department: ELE,
+      hours: 48,
+      icon: lightbulb-off,
+    }
+  stray_animals: { en: Stray animals, hi: आवारा पशु, mr: भटकी जनावरे, department: HLT, hours: 72, icon: dog }
+  pothole: { en: Pothole, hi: सड़क में गड्ढा, mr: रस्त्यावर खड्डा, department: RDS, hours: 168, icon: construction }
+  other: { en: Other, hi: अन्य, mr: इतर, department: null, hours: 72, icon: circle-help } # manager must pick department_code at triage

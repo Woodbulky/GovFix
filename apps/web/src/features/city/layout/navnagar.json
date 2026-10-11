@@ -1,0 +1,215 @@
+{
+  "_note": "STUB from Lane A (P1): 10 rectangular wards + 16 landmarks so the database has a city. Lane D replaces this with the full layout (docs/CITY.md); keep ward ids and landmark names stable, then run npm run gen:city.",
+  "seed": "navnagar",
+  "bounds": { "minX": -1200, "maxX": 1200, "minZ": -1200, "maxZ": 1200 },
+  "wards": [
+    {
+      "id": 1,
+      "name": { "en": "Juna Bazaar", "hi": "जुना बाज़ार", "mr": "जुना बाजार" },
+      "zone": "old_city",
+      "polygon": [
+        [-1200, -400],
+        [-300, -400],
+        [-300, 300],
+        [-1200, 300]
+      ]
+    },
+    {
+      "id": 2,
+      "name": { "en": "Nadi Kinara", "hi": "नदी किनारा", "mr": "नदी किनारा" },
+      "zone": "riverfront",
+      "polygon": [
+        [-1200, 300],
+        [500, 300],
+        [500, 600],
+        [-1200, 600]
+      ]
+    },
+    {
+      "id": 3,
+      "name": { "en": "Station Road", "hi": "स्टेशन रोड", "mr": "स्टेशन रोड" },
+      "zone": "commercial",
+      "polygon": [
+        [350, -400],
+        [1200, -400],
+        [1200, 300],
+        [350, 300]
+      ]
+    },
+    {
+      "id": 4,
+      "name": { "en": "Vidya Nagar", "hi": "विद्या नगर", "mr": "विद्यानगर" },
+      "zone": "campus",
+      "polygon": [
+        [-400, -1200],
+        [400, -1200],
+        [400, -400],
+        [-400, -400]
+      ]
+    },
+    {
+      "id": 5,
+      "name": { "en": "Lakeview", "hi": "लेकव्यू", "mr": "लेकव्ह्यू" },
+      "zone": "societies",
+      "polygon": [
+        [400, -1200],
+        [1200, -1200],
+        [1200, -400],
+        [400, -400]
+      ]
+    },
+    {
+      "id": 6,
+      "name": { "en": "Udyog Nagar", "hi": "उद्योग नगर", "mr": "उद्योग नगर" },
+      "zone": "industrial",
+      "polygon": [
+        [500, 300],
+        [1200, 300],
+        [1200, 1200],
+        [500, 1200]
+      ]
+    },
+    {
+      "id": 7,
+      "name": { "en": "Ghantaghar", "hi": "घंटाघर", "mr": "घंटाघर" },
+      "zone": "centre",
+      "polygon": [
+        [-300, -400],
+        [350, -400],
+        [350, 300],
+        [-300, 300]
+      ]
+    },
+    {
+      "id": 8,
+      "name": { "en": "Tekdi Paytha", "hi": "टेकड़ी पायथा", "mr": "टेकडी पायथा" },
+      "zone": "foothills",
+      "polygon": [
+        [-1200, -1200],
+        [-400, -1200],
+        [-400, -400],
+        [-1200, -400]
+      ]
+    },
+    {
+      "id": 9,
+      "name": { "en": "Hari Nagar", "hi": "हरि नगर", "mr": "हरी नगर" },
+      "zone": "residential",
+      "polygon": [
+        [-1200, 600],
+        [-300, 600],
+        [-300, 1200],
+        [-1200, 1200]
+      ]
+    },
+    {
+      "id": 10,
+      "name": { "en": "Navi Vasahat", "hi": "नवी वसाहत", "mr": "नवी वसाहत" },
+      "zone": "new_extension",
+      "polygon": [
+        [-300, 600],
+        [500, 600],
+        [500, 1200],
+        [-300, 1200]
+      ]
+    }
+  ],
+  "landmarks": [
+    {
+      "name": { "en": "Ghantaghar Chowk", "hi": "घंटाघर चौक", "mr": "घंटाघर चौक" },
+      "x": 0,
+      "z": -100,
+      "aliases": ["ghantaghar", "ghantaghar chowk", "clock tower", "घंटाघर", "घंटाघर चौक"]
+    },
+    {
+      "name": { "en": "NMC Head Office", "hi": "नमनपा मुख्यालय", "mr": "नमनपा मुख्य कार्यालय" },
+      "x": 60,
+      "z": -160,
+      "aliases": ["nmc office", "municipal office", "corporation office", "महानगरपालिका", "मनपा कार्यालय"]
+    },
+    {
+      "name": { "en": "Market Hall", "hi": "मार्केट हॉल", "mr": "मंडई हॉल" },
+      "x": -150,
+      "z": 20,
+      "aliases": ["market hall", "mandai hall", "मार्केट", "मंडई"]
+    },
+    {
+      "name": { "en": "Bhaji Mandai", "hi": "सब्ज़ी मंडी", "mr": "भाजी मंडई" },
+      "x": -700,
+      "z": -50,
+      "aliases": ["bhaji mandai", "vegetable market", "sabzi mandi", "भाजी मंडई", "सब्ज़ी मंडी"]
+    },
+    {
+      "name": { "en": "Ganpati Mandir", "hi": "गणपति मंदिर", "mr": "गणपती मंदिर" },
+      "x": -850,
+      "z": 120,
+      "aliases": ["ganpati mandir", "ganpati temple", "ganesh mandir", "गणपती मंदिर", "गणपति मंदिर"]
+    },
+    {
+      "name": { "en": "Nadi Ghat", "hi": "नदी घाट", "mr": "नदी घाट" },
+      "x": -500,
+      "z": 450,
+      "aliases": ["nadi ghat", "river ghat", "ghat", "नदी घाट", "घाट"]
+    },
+    {
+      "name": { "en": "Juna Pool", "hi": "जुना पुल", "mr": "जुना पूल" },
+      "x": -200,
+      "z": 450,
+      "aliases": ["juna pool", "old bridge", "जुना पूल", "पुराना पुल"]
+    },
+    {
+      "name": { "en": "Navin Pool", "hi": "नवीन पुल", "mr": "नवीन पूल" },
+      "x": 250,
+      "z": 450,
+      "aliases": ["navin pool", "new bridge", "नवीन पूल", "नया पुल"]
+    },
+    {
+      "name": { "en": "Railway Station", "hi": "रेलवे स्टेशन", "mr": "रेल्वे स्टेशन" },
+      "x": 700,
+      "z": -100,
+      "aliases": ["railway station", "station", "रेल्वे स्टेशन", "रेलवे स्टेशन", "स्टेशन"]
+    },
+    {
+      "name": { "en": "ST Stand", "hi": "एसटी बस स्टैंड", "mr": "एसटी स्टँड" },
+      "x": 520,
+      "z": 50,
+      "aliases": ["st stand", "bus stand", "एसटी स्टँड", "बस स्टँड", "बस स्टैंड"]
+    },
+    {
+      "name": { "en": "Vidya College Gate", "hi": "विद्या कॉलेज गेट", "mr": "विद्या महाविद्यालय प्रवेशद्वार" },
+      "x": 0,
+      "z": -700,
+      "aliases": ["vidya college", "college gate", "विद्या कॉलेज", "कॉलेज गेट", "महाविद्यालय"]
+    },
+    {
+      "name": { "en": "Lake Garden", "hi": "लेक गार्डन", "mr": "तलाव उद्यान" },
+      "x": 800,
+      "z": -800,
+      "aliases": ["lake garden", "lake", "talav", "तलाव", "लेक गार्डन", "झील"]
+    },
+    {
+      "name": { "en": "Water Treatment Plant", "hi": "जल शोधन संयंत्र", "mr": "जलशुद्धीकरण केंद्र" },
+      "x": 850,
+      "z": 700,
+      "aliases": ["water treatment plant", "wtp", "jal shuddhikaran", "जलशुद्धीकरण केंद्र", "जल शोधन"]
+    },
+    {
+      "name": { "en": "Tekdi Water Tank", "hi": "टेकड़ी पानी की टंकी", "mr": "टेकडी पाण्याची टाकी" },
+      "x": -850,
+      "z": -900,
+      "aliases": ["tekdi tank", "water tank", "hill tank", "पाण्याची टाकी", "पानी की टंकी"]
+    },
+    {
+      "name": { "en": "Hari Nagar School", "hi": "हरि नगर स्कूल", "mr": "हरी नगर शाळा" },
+      "x": -700,
+      "z": 850,
+      "aliases": ["hari nagar school", "school", "हरी नगर शाळा", "शाळा", "स्कूल"]
+    },
+    {
+      "name": { "en": "IT Park Gate", "hi": "आईटी पार्क गेट", "mr": "आयटी पार्क गेट" },
+      "x": 100,
+      "z": 900,
+      "aliases": ["it park", "it park gate", "आयटी पार्क", "आईटी पार्क"]
+    }
+  ]
+}
