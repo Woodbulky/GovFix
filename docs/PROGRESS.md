@@ -10,11 +10,11 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 | P3 Auth and shell | B | done | 93a8c45 | 2026-10-11 15:43 |
 | P4 Citizen | B | done | bfbaee2 | 2026-10-11 16:06 |
 | P5 Staff | A (built by B) | done | 32cfe5c | 2026-10-11 16:45 |
-| P6 AI service | C | todo | | |
+| P6 AI service | C | done | (this commit) | 2026-10-11 |
 | P7 NIVA | C | todo | | |
 | P8a City geometry | D | todo | | |
 | P8b City integration | D | todo | | |
-| P9 Admin and proof tools | A (built by B) | done | (this commit) | 2026-10-11 16:55 |
+| P9 Admin and proof tools | A (built by B) | done | 5b33015 | 2026-10-11 16:55 |
 | P10 Demo hardening | all | todo | | |
 
 ## Manual steps waiting on Studio
@@ -37,6 +37,10 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
 
 ## Entries
+
+### P6 AI service (done 2026-10-11)
+- Built: `/suggest` (Groq → keyword fallback, extracted spans, fastembed duplicate detection), `/draft-reply` (neutral tone), `/tts`, `/niva/session`; JWT verification; writes only to `ai_suggestions` as `ai_writer`. Web: `features/ai/` AI Suggestions panel (Accept / Edit / Dismiss via `decide_suggestion`, Accept pre-fills triage), ProviderBadge, draft reply → `send_citizen_update`, highlighted spans. Accuracy on 20 labelled examples: llm 20/20, keyword 15/20 (services/ai/README.md). Marathi water leak → `water_leak` 0.97 `llm`. pytest 6/6, typecheck clean.
+- Manual steps for Studio: deploy services/ai on Render from `render.yaml`, set Groq / ElevenLabs / `AI_WRITER_*` secrets and `ALLOWED_ORIGINS`, then check `/health` from the Vercel origin.
 
 ### P9 Admin and proof tools (done 2026-10-11 16:55, built from a Lane B fork at Studio's request)
 - Built (`features/admin/`, all frontend; every RPC already existed from P2): **Overview** (SLA compliance from SQL `sla_ratio`, past deadline now from `sla_status_of`, L1 (incl. triage L1) and L2 counts, open by state, requests by department and average resolution hours by category as labelled bars, ward map tinted by past-deadline count plus a text list per ward). **Audit log** (newest 500, filters by ticket (in the URL), action and outcome; actor names incl. citizens; refused rows ⛔; hash prefix; **Verify chain** → "✓ Chain intact · N entries" / "✗ Chain broken at entry #N" with that row outlined and marked ✗; **Tamper demo** in demo mode only; `?id=N` outlines the row the API Console links to). **Workflow & SLA** (Mermaid 12.1.0 state diagram generated from `workflow_transitions`, lazy-loaded chunk; transition table with roles, requires, guards; SLA editor via `update_sla_policy`, showing current hours, effective from and version count). **Time Machine** (+1h/+4h/+12h/+1 day/custom hours via `time_machine_advance`, which also sweeps; Run escalation check now; AI offline toggle; Reset demo scenario with an in-page confirm step; every action invalidates all queries so the Sim time badge and lists move at once). **API Console** (acting user = any demo user; it signs in a throwaway non-persisted supabase client as that user, so the call carries their JWT; ticket, action, JSON payload, `expected_state` = current state; `p_channel = 'api'`; raw JSON response and a link to the audit row). **Users** (read-only, all profiles with role, department, wards, language). `CityMap2D` got an optional `tint` prop (Lane D's file, additive). `DemoSwitcher` exports `DEMO_USERS` for the console. Admin strings in `en.json` under `admin.*` (hi/mr fall back to English).

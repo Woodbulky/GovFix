@@ -4,7 +4,8 @@ services:
     runtime: python
     plan: free
     rootDir: services/ai
-    buildCommand: pip install uv && uv export --no-dev --no-hashes -o requirements.txt && pip install -r requirements.txt
+    # The embedding model is downloaded at build time into services/ai/models, never on the first request.
+    buildCommand: pip install uv && uv export --no-dev --no-hashes -o requirements.txt && pip install -r requirements.txt && python -c "from app.dupes import model; model()"
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
@@ -12,6 +13,8 @@ services:
         value: 3.11.11
       - key: SUPABASE_URL
         value: https://xwojruafxtczmqwsasgk.supabase.co
+      - key: SUPABASE_ANON_KEY
+        sync: false
       - key: AI_DATABASE_URL
         sync: false
       - key: SUPABASE_JWT_SECRET
@@ -22,7 +25,17 @@ services:
         sync: false
       - key: GROQ_MODEL
         sync: false
+      - key: GROQ_VISION_MODEL
+        sync: false
       - key: ELEVENLABS_API_KEY
         sync: false
       - key: ELEVENLABS_AGENT_ID
+        sync: false
+      - key: ELEVENLABS_TTS_MODEL
+        sync: false
+      - key: ELEVENLABS_VOICE_ID_MR
+        sync: false
+      - key: ELEVENLABS_VOICE_ID_HI
+        sync: false
+      - key: ELEVENLABS_VOICE_ID_EN
         sync: false

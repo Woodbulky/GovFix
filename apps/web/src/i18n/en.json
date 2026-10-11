@@ -317,6 +317,27 @@
     "ai": "AI suggestions",
     "noSuggestion": "No suggestion yet.",
     "useSuggestion": "Use this",
+    "aiAct": {
+      "accept": "Accept",
+      "edit": "Edit",
+      "dismiss": "Dismiss",
+      "save": "Save edit",
+      "get": "Get suggestion",
+      "asking": "Asking…",
+      "unavailable": "AI is unavailable. You can carry on without it.",
+      "draft": "Draft with AI",
+      "drafting": "Drafting…",
+      "draftNote": "AI draft. Check it and edit before sending.",
+      "decided": "Suggestion marked {{decision}}",
+      "extracted": "Highlighted by AI:",
+      "summary": "Summary"
+    },
+    "span": {
+      "landmark_text": "Landmark",
+      "ward_text": "Ward",
+      "since_text": "Since",
+      "urgency": "Urgency"
+    },
     "sugg": {
       "category": "Category",
       "extraction": "Details",

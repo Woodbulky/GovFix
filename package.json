@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "npm -w apps/web run dev",
     "build": "npm -w apps/web run build",
-    "ai": "uv run --project services/ai uvicorn app.main:app --app-dir services/ai --port 8787 --reload",
+    "ai": "uv run --env-file .env --project services/ai uvicorn app.main:app --app-dir services/ai --port 8787 --reload",
     "db:push": "tsx --env-file=.env scripts/db-push.ts",
     "db:types": "tsx --env-file=.env scripts/db-types.ts",
     "seed:users": "tsx --env-file=.env scripts/seed-users.ts",

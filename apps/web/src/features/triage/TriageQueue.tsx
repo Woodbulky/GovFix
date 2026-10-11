@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { duration } from '@/components/SlaBadge';
 import { ProviderBadge } from '@/components/ProviderBadge';
 import { EscalationBadge } from '@/components/EscalationBadge';
+import { Highlighted, useDecide } from '@/features/ai/AiPanel';
 import { useRequestTitle } from '@/features/citizen/ComplaintCard';
 import { usePhotoUrls } from '@/features/citizen/hooks';
 import { usePlaceLabel } from '@/features/report/LocationStep';
@@ -104,11 +105,14 @@ function TriageDrawer({ r, onClose }: { r: StaffRequest; onClose: () => void }) 
   const [mode, setMode] = useState<'triage' | 'merge_duplicate' | 'reject'>('triage');
   const [pick, setPick] = useState<{ code: string; id: string } | null>(null);
   const [dupe, setDupe] = useState<Suggestion | null>(null);
+  const { decide, busy } = useDecide();
   useEffect(() => ref.current?.showModal(), []);
 
   const sugg = data?.suggestions ?? [];
-  const categories = sugg.filter((s) => s.type === 'category' || s.type === 'photo_category');
-  const dupes = sugg.filter((s) => s.type === 'duplicate');
+  const categories = sugg.filter(
+    (s) => (s.type === 'category' || s.type === 'photo_category') && s.status !== 'dismissed',
+  );
+  const dupes = sugg.filter((s) => s.type === 'duplicate' && s.status !== 'dismissed');
   const payload = (s: Suggestion) => (s.payload ?? {}) as Record<string, string | number | undefined>;
   const candidate = dupe && all?.find((q) => q.id === payload(dupe).candidate_request_id);
   const catName = (code: unknown) =>
@@ -136,9 +140,9 @@ function TriageDrawer({ r, onClose }: { r: StaffRequest; onClose: () => void }) 
             <X aria-hidden />
           </button>
         </header>
-        <p className="whitespace-pre-line rounded-md bg-surface p-3" lang={r.language}>
-          {r.description}
-        </p>
+        <div className="rounded-md bg-surface p-3">
+          <Highlighted text={r.description} lang={r.language} suggestions={sugg} />
+        </div>
 
         <section className="space-y-2" aria-label={t('staff.ai')}>
           {!categories.length && !dupes.length && <p className="text-ink-muted">{t('staff.noSuggestion')}</p>}
@@ -148,15 +152,23 @@ function TriageDrawer({ r, onClose }: { r: StaffRequest; onClose: () => void }) 
               <span className="tabular">{Number(s.confidence ?? 0).toFixed(2)}</span>
               <ProviderBadge provider={s.provider} />
               {payload(s).rationale && <span className="w-full text-sm">{payload(s).rationale}</span>}
+              {/* Accept marks the suggestion decided and pre-fills the form; only Confirm changes the request. */}
               <button
-                onClick={() => {
+                disabled={busy}
+                onClick={async () => {
+                  if (!(await decide(s, 'accepted'))) return;
                   setMode('triage');
                   setPick({ code: String(payload(s).category_code), id: s.id });
                 }}
-                className={secondary}
+                className={pick?.id === s.id ? primary : secondary}
               >
-                {t('staff.useSuggestion')}
+                {t('staff.aiAct.accept')}
               </button>
+              {s.status === 'pending' && (
+                <button disabled={busy} onClick={() => void decide(s, 'dismissed')} className={secondary}>
+                  {t('staff.aiAct.dismiss')}
+                </button>
+              )}
             </div>
           ))}
           {dupes.map((s) => (
@@ -171,6 +183,11 @@ function TriageDrawer({ r, onClose }: { r: StaffRequest; onClose: () => void }) 
               >
                 {t('staff.compare')}
               </button>
+              {s.status === 'pending' && (
+                <button disabled={busy} onClick={() => void decide(s, 'dismissed')} className={secondary}>
+                  {t('staff.aiAct.dismiss')}
+                </button>
+              )}
             </div>
           ))}
           {candidate && (

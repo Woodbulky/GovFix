@@ -8,6 +8,7 @@ supabase/.branches/
 .venv/
 __pycache__/
 .pytest_cache/
+services/ai/models/
 *.log
 .vercel/
 coverage/

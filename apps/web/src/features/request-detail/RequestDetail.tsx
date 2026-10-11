@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { EscalationBadge } from '@/components/EscalationBadge';
-import { ProviderBadge } from '@/components/ProviderBadge';
 import { SlaBadge } from '@/components/SlaBadge';
 import { StatusChip } from '@/components/StatusChip';
 import { Stepper } from '@/components/Stepper';
+import { AiPanel, DraftButton, Highlighted, useDecide } from '@/features/ai/AiPanel';
 import { useAuth } from '@/features/auth/store';
 import { CityMap2D } from '@/features/city/CityMap2D';
 import { useRequestTitle } from '@/features/citizen/ComplaintCard';
@@ -15,7 +15,14 @@ import { rpc } from '@/lib/rpc';
 import { fmtWhen } from '@/lib/time';
 import { cn } from '@/lib/utils';
 import { ActionForm, primary, secondary } from './ActionForm';
-import { type RequestBundle, type StaffRequest, useRequest, useStaffAct, useStaffDirectory } from './hooks';
+import {
+  type RequestBundle,
+  type StaffRequest,
+  type Suggestion,
+  useRequest,
+  useStaffAct,
+  useStaffDirectory,
+} from './hooks';
 import { useAllowedActions } from './useAllowedActions';
 
 const panel = 'space-y-4 rounded-lg border border-line bg-surface p-4';
@@ -29,17 +36,17 @@ export function RequestDetail() {
   const r = data.request;
   return (
     <div className="grid gap-4 xl:grid-cols-[32fr_36fr_32fr]">
-      <Complaint r={r} />
-      <Work r={r} messages={data.messages} />
+      <Complaint r={r} suggestions={data.suggestions} />
+      <Work r={r} messages={data.messages} suggestions={data.suggestions} />
       <div className="space-y-4">
-        <AiPanel suggestions={data.suggestions} />
+        <AiPanel requestId={r.id} suggestions={data.suggestions} />
         <AuditTimeline audit={data.audit} />
       </div>
     </div>
   );
 }
 
-function Complaint({ r }: { r: StaffRequest }) {
+function Complaint({ r, suggestions }: { r: StaffRequest; suggestions: Suggestion[] }) {
   const { t } = useTranslation();
   const title = useRequestTitle(r);
   const place = usePlaceLabel(r);
@@ -55,9 +62,7 @@ function Complaint({ r }: { r: StaffRequest }) {
         </h1>
         <p className="text-ink-muted">{place}</p>
       </header>
-      <p className="whitespace-pre-line" lang={r.language}>
-        {r.description}
-      </p>
+      <Highlighted text={r.description} lang={r.language} suggestions={suggestions} />
       {r.transcript && (
         <details>
           <summary className="cursor-pointer font-medium">{t('staff.transcript')}</summary>
@@ -91,13 +96,22 @@ function Complaint({ r }: { r: StaffRequest }) {
   );
 }
 
-function Work({ r, messages }: { r: StaffRequest; messages: RequestBundle['messages'] }) {
+function Work({
+  r,
+  messages,
+  suggestions,
+}: {
+  r: StaffRequest;
+  messages: RequestBundle['messages'];
+  suggestions: Suggestion[];
+}) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState<string | null>(null);
   const { act, run, busy } = useStaffAct();
   const actions = useAllowedActions(r);
   const role = useAuth((s) => s.profile?.role);
   const canUpdate = actions.canUpdateCitizen;
+  const { decide } = useDecide();
 
   return (
     <section className={panel} aria-labelledby="work-h">
@@ -165,11 +179,15 @@ function Work({ r, messages }: { r: StaffRequest; messages: RequestBundle['messa
             label={t(open === 'update' ? 'staff.field.update' : 'staff.field.note')}
             button={t(`staff.action.${open}`)}
             busy={busy}
-            onSend={async (body) => {
+            draftFor={open === 'update' ? r.id : undefined}
+            onSend={async (body, draft) => {
+              // A kept or edited AI draft is marked decided and referenced by the audit row (golden rule 3).
+              const s = draft && suggestions.find((x) => x.id === draft.id);
+              if (s) await decide(s, body === draft.text ? 'accepted' : 'edited', { text: body });
               const ok = await run(
                 () =>
                   open === 'update'
-                    ? rpc('send_citizen_update', { p_request_id: r.id, p_body: body })
+                    ? rpc('send_citizen_update', { p_request_id: r.id, p_body: body, p_ai_suggestion_id: draft?.id })
                     : rpc('add_staff_note', { p_request_id: r.id, p_body: body }),
                 t(`staff.done.${open}`),
               );
@@ -204,14 +222,18 @@ export function MessageForm(p: {
   label: string;
   button: string;
   busy: boolean;
-  onSend: (body: string) => Promise<void>;
+  /** Request id: shows "Draft with AI" (citizen updates only). */
+  draftFor?: string;
+  onSend: (body: string, draft?: { id: string; text: string }) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const [body, setBody] = useState('');
+  const [draft, setDraft] = useState<{ id: string; text: string }>();
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        void p.onSend(body);
+        void p.onSend(body, draft);
       }}
       className="space-y-2"
     >
@@ -225,9 +247,21 @@ export function MessageForm(p: {
           className="mt-1 block w-full rounded-md border border-line bg-surface p-2"
         />
       </label>
-      <button disabled={p.busy} className={primary}>
-        {p.button}
-      </button>
+      {draft && <p className="text-sm text-ink-muted">{t('staff.aiAct.draftNote')}</p>}
+      <div className="flex flex-wrap gap-2">
+        <button disabled={p.busy} className={primary}>
+          {p.button}
+        </button>
+        {p.draftFor && (
+          <DraftButton
+            requestId={p.draftFor}
+            onDraft={(text, id) => {
+              setBody(text);
+              setDraft({ id, text });
+            }}
+          />
+        )}
+      </div>
     </form>
   );
 }
@@ -263,36 +297,6 @@ function SlaClock({ r }: { r: StaffRequest }) {
       </p>
     </div>
   );
-}
-
-/** P6 fills ai_suggestions and adds Accept / Edit / Dismiss; until then this lists what's there. */
-function AiPanel({ suggestions }: { suggestions: RequestBundle['suggestions'] }) {
-  const { t } = useTranslation();
-  return (
-    <section className={panel} aria-labelledby="ai-h">
-      <h2 id="ai-h" className="text-lg">
-        {t('staff.ai')}
-      </h2>
-      {!suggestions.length && <p className="text-ink-muted">{t('staff.noSuggestion')}</p>}
-      <ul className="space-y-2">
-        {suggestions.map((s) => (
-          <li key={s.id} className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="font-medium">{t(`staff.sugg.${s.type}`, { defaultValue: s.type })}</span>
-            <SuggestionText s={s} />
-            {s.confidence != null && <span className="tabular">{Number(s.confidence).toFixed(2)}</span>}
-            <ProviderBadge provider={s.provider} />
-            <span className="text-ink-muted">{t(`staff.suggStatus.${s.status}`)}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-export function SuggestionText({ s }: { s: RequestBundle['suggestions'][number] }) {
-  const p = (s.payload ?? {}) as Record<string, unknown>;
-  const text = p.category_code ?? p.ticket_no ?? p.duplicate_ticket ?? p.text ?? '';
-  return text ? <span>{String(text)}</span> : null;
 }
 
 function AuditTimeline({ audit }: { audit: RequestBundle['audit'] }) {
