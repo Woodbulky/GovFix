@@ -5,6 +5,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/Toaster';
 import { useAuth } from '@/features/auth/store';
 import { useNotifications } from '@/features/citizen/hooks';
+import { Niva } from '@/features/niva/NivaCall';
 import { useDemoMode } from '@/lib/queries';
 import { rpc } from '@/lib/rpc';
 import { cn } from '@/lib/utils';
@@ -141,6 +142,7 @@ export function AppShell() {
   return (
     <>
       {role && role !== 'citizen' ? <StaffLayout /> : <TopBarLayout />}
+      {role && <Niva />}
       <Toaster />
     </>
   );

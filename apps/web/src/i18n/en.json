@@ -70,7 +70,39 @@
   },
   "simTime": "Sim time · {{when}}",
   "niva": {
-    "soon": "NIVA for staff arrives with the voice assistant phase"
+    "title": "Talking to NIVA",
+    "phase": {
+      "connecting": "Connecting…",
+      "listening": "Listening",
+      "thinking": "Thinking",
+      "speaking": "Speaking",
+      "error": "NIVA isn't available right now"
+    },
+    "mute": "Mute microphone",
+    "unmute": "Unmute microphone",
+    "end": "End call",
+    "speakerOff": "Turn speaker off",
+    "speakerOn": "Turn speaker on",
+    "expand": "Open the call screen",
+    "captions": "Conversation",
+    "you": "You: ",
+    "typeInstead": "Type instead",
+    "switchToTyping": "Switch to typing",
+    "fallback": "NIVA couldn't connect. You can type your complaint; what NIVA heard is kept.",
+    "draft": {
+      "title": "What NIVA understood",
+      "problem": "Problem",
+      "category": "Type",
+      "place": "Place",
+      "since": "Since",
+      "photos": "Photos",
+      "empty": "Not yet",
+      "danger": "Someone may be in danger. Call 112 first."
+    },
+    "photoTitle": "Add a photo",
+    "pickTitle": "Show the spot on the map",
+    "usePlace": "Use this place",
+    "done": "Done"
   },
   "soon": "This screen is being built (phase {{phase}}).",
   "notAvailable": {
@@ -217,8 +249,7 @@
     "photoFailed_other": "{{count}} photos couldn't be added. Your complaint is filed.",
     "successTitle": "Complaint registered",
     "successBody": "We'll review it within {{n}} hours.",
-    "trackIt": "Track this complaint",
-    "nivaSoon": "Talking to NIVA is coming soon. For now, please type your complaint here."
+    "trackIt": "Track this complaint"
   },
   "citizen": {
     "greeting": "Namaskar, {{name}}",

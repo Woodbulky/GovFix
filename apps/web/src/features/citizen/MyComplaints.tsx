@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/features/auth/store';
+import { useNivaSummary } from '@/features/niva/store';
 import type { State } from '@/lib/rpc';
 import { cn } from '@/lib/utils';
 import { ComplaintCard } from './ComplaintCard';
@@ -22,6 +23,13 @@ export function MyComplaints() {
   const { data, isPending } = useMyRequests();
   const [tab, setTab] = useState('all');
   const list = data?.filter((r) => TABS[tab](r.state)) ?? [];
+  useNivaSummary(
+    data &&
+      `${t('nav.myComplaints')}: ` +
+        Object.keys(TABS)
+          .map((k) => `${t(`mine.tab.${k}`)} ${data.filter((r) => TABS[k](r.state)).length}`)
+          .join(', '),
+  );
 
   return (
     <section className="space-y-4">

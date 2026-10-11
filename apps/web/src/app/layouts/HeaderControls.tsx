@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { DemoSwitcher } from '@/features/auth/DemoSwitcher';
 import { signOut, useAuth } from '@/features/auth/store';
+import { startNiva } from '@/features/niva/store';
 import { LANGS } from '@/i18n';
 import { useAppSettings, useSimNow } from '@/lib/queries';
 import { fmtWhen } from '@/lib/time';
@@ -74,14 +75,9 @@ export function HeaderControls() {
       >
         {t('largeText')}
       </button>
-      {/* ponytail: placeholder until P7 wires the NIVA call screen and the staff navigation tools */}
-      {staff ? (
-        <button
-          aria-disabled
-          title={t('niva.soon')}
-          className={cn(ctl, 'bg-marigold font-semibold text-canopy opacity-70')}
-        >
-          <Mic aria-hidden size={18} /> NIVA
+      {profile ? (
+        <button onClick={startNiva} className={cn(ctl, 'bg-marigold font-semibold text-canopy')}>
+          <Mic aria-hidden size={18} /> {staff ? 'NIVA' : t('actions.talk')}
         </button>
       ) : (
         <Link to="/report?mode=talk" className={cn(ctl, 'bg-marigold font-semibold text-canopy')}>

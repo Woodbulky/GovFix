@@ -84,6 +84,26 @@ HARD LIMITS
 
 There are no tools for transitions, assignment or deadlines, by design.
 
+### Registering them (ElevenLabs → Agent NIVA → Tools → Add tool → Client)
+
+For every tool: type **Client**, **Wait for response: on**, response timeout 20 s (120 s for `open_location_picker` and `request_photo`, which wait for a tap). Parameters (all optional unless marked *required*):
+
+| Tool | Description for the LLM | Parameters |
+|---|---|---|
+| `update_draft` | Save what you learned about the complaint so far | `description` string, `category_hint` string (one of `water_leak`, `no_water_supply`, `garbage_not_collected`, `streetlight_out`, `pothole`, `drainage_overflow`, `stray_animals`, `other`, as seeded in `categories`), `landmark_id` number, `ward_id` number, `since_text` string, `risk_to_people` boolean |
+| `resolve_landmark` | Find the landmark the person named | `query` string *required*, `ward_hint` number |
+| `open_location_picker` | Let the person tap the spot on the map | none |
+| `request_photo` | Let the person add a photo | none |
+| `submit_complaint` | File the complaint after a clear yes | `confirmation_text` string *required*: the person's exact words |
+| `get_my_complaints` | The person's latest complaints and their status | none |
+| `get_status` | Status of one ticket | `ticket_no` string *required* |
+| `navigate` | Open a page of the app | `page` string *required* (enum: `home`, `report`, `my_complaints`, `complaint_detail`, `city`, `notifications`, `profile`, `triage`, `board`, `escalations`, `my_work`, `overview`, `audit`), `ticket_no` string |
+| `fly_to` | Move the city map to a place or ticket | `target_type` string *required* (enum: `ward`, `landmark`, `ticket`), `value` string *required* |
+| `filter_city` | Filter the complaints shown on the city map | `category` string, `status` string (enum: `open`, `past_deadline`, `resolved`, `all`), `ward_id` number, `mine` boolean |
+| `set_language` | Change the app language | `lang` string *required* (enum: `en`, `hi`, `mr`) |
+| `set_text_size` | Make text larger or normal | `size` string *required* (enum: `normal`, `large`) |
+| `read_screen_summary` | Describe the current screen | none |
+
 ## Call screen (see DESIGN.md)
 
 Dark canopy background, NIVA avatar in a ring, waveform tied to the output volume, live captions for both sides, and the draft card beside it on desktop (or a bottom sheet on mobile). Controls: Mute, End, Speaker, Switch to typing. States: connecting, listening, thinking, speaking, error. The error state offers "Type instead" immediately.

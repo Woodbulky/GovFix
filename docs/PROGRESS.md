@@ -11,7 +11,7 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 | P4 Citizen | B | done | bfbaee2 | 2026-10-11 16:06 |
 | P5 Staff | A (built by B) | done | 32cfe5c | 2026-10-11 16:45 |
 | P6 AI service | C | done | e484a22 | 2026-10-11 |
-| P7 NIVA | C | todo | | |
+| P7 NIVA | C | built; tool registration + mic tests waiting on Studio | (this commit) | 2026-10-11 |
 | P8a City geometry | D | done | 9dd92d4 | 2026-10-11 17:46 |
 | P8b City integration | D | done (migration applied, engine 45/45; live browser check pending) | merge commit | 2026-10-11 |
 | P9 Admin and proof tools | A (built by B) | done | 5b33015 | 2026-10-11 16:55 |
@@ -22,7 +22,8 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - [x] `SUPABASE_SERVICE_ROLE_KEY` in `.env`; `DEMO_PASSWORD` and `AI_WRITER_PASSWORD` generated into `.env` by Claude (change them if you like)
 - [x] `SUPABASE_DB_URL` in `.env`. `npm run db:push` and `npm run db:types` both work
 - [ ] **Rotate (if not done) the Groq, ElevenLabs and service-role keys**: they were briefly in `.env.example`. Moved to `.env` before the first commit, so they never reached git
-- [x] ElevenLabs agent NIVA created per docs/NIVA.md (English default + Marathi + Hindi, Hinglish Mode, Sarah voice, prompt, 5 vars, Language override, authentication on); voice IDs in `.env`; Marathi TTS tested. Client tools are registered in P7
+- [x] ElevenLabs agent NIVA created per docs/NIVA.md (English default + Marathi + Hindi, Hinglish Mode, Sarah voice, prompt, 5 vars, Language override, authentication on); voice IDs in `.env`; Marathi TTS tested
+- [ ] **Register NIVA's 13 client tools** in the ElevenLabs dashboard exactly as listed in docs/NIVA.md "Registering them" (the agent has none yet, checked over the API), then Publish. Without them NIVA talks but can't fill the draft, submit, read status or navigate
 - [ ] Delete the blank line before `{{first_message}}` in the English (default) first message, then Publish
 - [x] `GROQ_API_KEY` (15 valid keys) and `GROQ_MODEL=openai/gpt-oss-120b` in `.env` (set in Render later; Lane C may pick another model in P6)
 - [ ] Vercel env: add `VITE_DEMO_PASSWORD` (same value as `DEMO_PASSWORD`) next to the other `VITE_*` values, or the demo role switcher stays hidden
@@ -37,6 +38,15 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
 
 ## Entries
+
+### P7 NIVA (built 2026-10-11; tool registration and microphone tests waiting on Studio)
+- Built (`features/niva/`): `Niva` (ElevenLabs `@elevenlabs/react` 1.17.0 `ConversationProvider`, mounted in `AppShell` for signed-in users) with the call screen per DESIGN.md: canopy background, illustrated avatar in a marigold ring (breathes while listening), 5-bar waveform on the output volume (static under reduced motion), captions (NIVA white, you soft green), states Connecting / Listening / Thinking / Speaking / error, 64 px Mute / End / Speaker, "Switch to typing". It docks to a bottom bar whenever NIVA navigates, flies or filters, so the page stays visible. Session: `GET /niva/session` (P6, signed URL, key stays server-side) → `startSession` with the five dynamic variables (`current_page` = route key) and `overrides.agent.language` = preferred language. All 13 client tools in `tools.ts` (`update_draft`, `resolve_landmark`, `open_location_picker`, `request_photo`, `submit_complaint`, `get_my_complaints`, `get_status`, `navigate`, `fly_to`, `filter_city` (reusing P8b's `useCityTools`), `set_language`, `set_text_size`, `read_screen_summary`). Draft card "What NIVA understood" highlights each changed field; danger cue shows "Call 112 first". Map pick and photo open modals (reusing `LocationStep` and `PhotoStep`) and the tool waits for the tap (2 min cap). `submit_complaint` refuses with `missing` for no description, ward or confirmation, then calls `create_request` as the citizen with `channel='voice'`, the caption transcript, `confirmation_text` and `conversation_id` (audited), uploads photos (shared `report/file.ts`) and asks `/suggest`. `navigate` checks the role's routes first. Header "Talk to NIVA" / staff "NIVA" button opens the call; `/report?mode=talk` too (the "coming soon" note is gone). Fallback: session fails, mic denied or the connection drops → toast, and citizens land on the typed Report form with the draft (text, category, place, photos) filled in. Voice notes for notifications were already done in P4 (`playNotification`: stored mp3 → `/tts` → browser speech). `useNivaSummary` hook (My complaints registers one); other pages answer with their heading and visible text. Strings in en/hi/mr. Tests: 2 new (ticket matching, draft hand-over); web 29/29, AI 6/6, typecheck and build clean.
+- NIVA.md tests: **3** ("Close my complaint" → polite refusal and the Confirm / Still a problem buttons) and **5** ("wire padli aahe, current aahe" → 112 first, then offers to file) pass in a text-only session with the real agent; **7** passes (AI service stopped → toast → typed form with the description and Water leak kept). The session also confirmed the signed URL, the Marathi greeting and the language override. **1, 2, 4, 6 need Studio**: they need the client tools registered (the agent has none) and a microphone.
+- Deviations (why):
+  - `since_text` has no column; it's appended to the description in brackets so the officer still sees it.
+  - Photos are attached after `create_request` (attach_photo needs the request id), same as the typed flow.
+  - Staff get the call too (navigate, filter, status), with no draft card.
+- Manual steps for Studio: register the 13 client tools (docs/NIVA.md "Registering them"), Publish the agent, then run NIVA tests 1, 2, 4 and 6 with a microphone.
 
 ### P8b City integration (built 2026-10-11; database step and live check waiting on Studio)
 - Built on top of P8a (branch `claude/awesome-wright-vdqdpf`, not yet on `main`), all in `features/city/` plus small additive hooks elsewhere.

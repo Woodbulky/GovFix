@@ -1,5 +1,5 @@
 import { Volume2 } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CategoryIcon } from '@/components/CategoryIcon';
@@ -9,10 +9,11 @@ import { requestSuggestions } from '@/lib/ai';
 import { useAppSettings } from '@/lib/queries';
 import { nameOf, useCategories } from '@/lib/reference';
 import { rpc, type RpcResult } from '@/lib/rpc';
-import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 import { speak } from '@/lib/voice';
-import { LocationStep, NO_PLACE, type Place, usePlaceLabel } from './LocationStep';
+import { EMPTY_DRAFT, hasDraft, startNiva, useNiva } from '@/features/niva/store';
+import { attachReportPhotos } from './file';
+import { LocationStep, type Place, usePlaceLabel } from './LocationStep';
 import { PhotoStep } from './PhotoStep';
 
 const STEPS = ['issue', 'location', 'photos', 'review'] as const;
@@ -23,15 +24,32 @@ type Created = RpcResult<{ request: { id: string; ticket_no: string } }>;
 
 export function ReportPage() {
   const { t, i18n } = useTranslation();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const uid = useAuth((s) => s.profile?.id);
   const { data: cats } = useCategories();
   const refused = useRefusalToast();
   const [step, setStep] = useState(0);
   const [category, setCategory] = useState(params.get('category') ?? NOT_SURE);
   const [description, setDescription] = useState('');
-  const [place, setPlace] = useState<Place>(NO_PLACE);
+  const [place, setPlace] = useState<Place>(EMPTY_DRAFT.place);
   const [photos, setPhotos] = useState<File[]>([]);
+
+  // Whatever NIVA understood carries over when the call ends or the citizen switches to typing (NIVA.md).
+  const nivaOpen = useNiva((s) => s.open);
+  useEffect(() => {
+    const d = useNiva.getState().draft;
+    if (nivaOpen || !hasDraft(d)) return;
+    setDescription((x) => x || d.description);
+    setCategory((x) => x || d.category_hint);
+    setPlace((x) => (x.ward_id ? x : d.place));
+    setPhotos((x) => (x.length ? x : d.photos));
+  }, [nivaOpen]);
+
+  useEffect(() => {
+    if (params.get('mode') !== 'talk') return;
+    startNiva();
+    setParams({}, { replace: true });
+  }, [params, setParams]);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<{ id: string; ticket: string } | null>(null);
   const placeLabel = usePlaceLabel(place);
@@ -60,15 +78,7 @@ export function ReportPage() {
         return;
       }
       const { id, ticket_no } = res.request;
-      let failed = 0;
-      for (const file of photos) {
-        const path = `${uid}/${crypto.randomUUID()}.jpg`;
-        const up = await supabase.storage.from('complaint-photos').upload(path, file, { contentType: 'image/jpeg' });
-        const att = up.error
-          ? null
-          : ((await rpc('attach_photo', { p_request_id: id, p_storage_path: path, p_kind: 'report' })) as RpcResult);
-        if (!att?.ok) failed++;
-      }
+      const failed = await attachReportPhotos(id, uid, photos);
       if (failed) toast(t('report.photoFailed', { n: failed }), 'refused');
       requestSuggestions(id);
       setDone({ id, ticket: ticket_no });
@@ -87,9 +97,6 @@ export function ReportPage() {
   return (
     <section className="mx-auto max-w-[640px] space-y-6">
       <h1 className="text-2xl">{t('nav.report')}</h1>
-      {params.get('mode') === 'talk' && (
-        <p className="rounded-md bg-surface p-3 text-ink-muted">{t('report.nivaSoon')}</p>
-      )}
       <ol className="flex gap-2" aria-label={t('report.progress')}>
         {STEPS.map((s, i) => (
           <li
