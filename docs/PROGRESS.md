@@ -6,7 +6,7 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 |---|---|---|---|---|
 | P0 Scaffold | A | done | 55b374d | 2026-10-11 14:00 |
 | P1 Database and seed | A | done | 1c7116d | 2026-10-11 14:15 |
-| P2 Workflow engine | A | todo | | |
+| P2 Workflow engine | A | done | (this commit) | 2026-10-11 15:30 |
 | P3 Auth and shell | B | todo | | |
 | P4 Citizen | B | todo | | |
 | P5 Staff | A | todo | | |
@@ -36,6 +36,23 @@ Update at the end of every phase (done by `/commit-phase`). Newest entry first.
 - 2026-10-11: The ElevenLabs free plan refuses library voices over the API (402). NIVA uses Sarah (premade, copied to My Voices, `gJU2icYQsdEmbGJ65Z8W`); the API accepts it, including Marathi. Upgrade to Starter only if the 10k characters a month run short.
 
 ## Entries
+
+### P2 Workflow engine (done 2026-10-11 15:30)
+- Built: 7 migrations. `engine_base` (`now_sim`, `append_audit` + `audit_hash` with advisory lock 4242, `_refusal`/`_deny` helpers, `notify` with en/hi/mr citizen templates, `sla_ratio`/`sla_status_of` as PostgREST computed fields + `sla_status(id)`), `engine_transition` (`transition_request` over `workflow_transitions` with a guard registry and an effect registry, in the WORKFLOW.md check order; `create_request`, `attach_photo`), `engine_sweep_admin` (`run_escalation_sweep` + pg_cron job `govfix-escalation-sweep` every minute, `time_machine_advance`, `set_ai_offline`, `verify_audit_chain`, `tamper_demo`, `decide_suggestion`, `send_citizen_update`, `add_staff_note`, `update_sla_policy`, `mark_read`), `engine_public` (`public_markers`, `track_request`, `my_request_timeline`, `resolve_landmark`, `locate_point`), `reset_demo` + 25-request scenario, plus two fix migrations. `npm run demo:reset` (`scripts/demo-reset.ts`). Types regenerated. Tests: `tests/engine/workflow.test.ts` + `time-audit.test.ts` cover all 20 WORKFLOW.md tests; with `rls.test.ts` that's 45/45 passing against the cloud project.
+- Scenario: tickets 000117 to 000141, so the first demo complaint is **NMC-2026-000142**. 000131 is the open water leak 250 m from Ghantaghar Chowk, submitted 20h ago (assigned to Patil, at risk). After the reset sweep: 4 past deadline (3 at L1, 000127 at L2), 1 triage escalation (000120), 2 NEEDS_INFO, 3 RESOLVED awaiting confirmation, 1 REOPENED, 3 CLOSED, 2 REJECTED (000139 merged into 000131). All 10 wards.
+- Deviations (why):
+  - `assign`/`reassign` set `assigned_officer_id` implicitly (any transition that requires `officer_id`); workflow.yaml lists no effect for it, and adding one would change the workflow config.
+  - `clear_department` also clears `category_code`: a reroute sends the request back for a fresh triage.
+  - Extra validations that refuse (and log) instead of erroring: `INVALID_FIELD:category_code|department_code|reason_code|ai_suggestion_id`. `create_request` and `attach_photo` refuse with codes too. `attach_photo` checks the object really exists in the bucket under the caller's folder.
+  - Notifications beyond the PRD table: `rejected` (citizen, on reject/merge) and `info_provided` (officer, on the citizen's reply). Staff-facing texts are English only.
+  - Test 10: auto-close (72h) always closes a RESOLVED request before the 7-day reopen window ends, so the reopen-window guard can only refuse if auto-close hasn't run. The test raises `auto_close_hours` for its duration and restores it.
+  - Calls with no `auth.uid()` (service role, pg_cron) act as `system`; that's how `npm run demo:reset` works. The demo-mode check still applies to them.
+  - `reset_demo` also deletes SLA policy versions created in the demo (`created_by is not null`).
+  - Engine tests now `reset_demo()` in `beforeAll` too (they need the clock at zero and an intact chain), and test 10/20 briefly change `app_settings` (`auto_close_hours`, `demo_mode`). Never run them during a presentation.
+  - `postgres` 3.4.9 added as a root dev dependency (test 17 connects as `ai_writer`).
+- Known issues: the scenario's RESOLVED requests have no proof photo rows (no seed photos yet). `locate_point` can't refuse river clicks: the river isn't in the database (stub layout), so the picker has to refuse them client-side until Lane D adds it. `track_request` has no rate limit on phone-digit guesses (marked `ponytail:`). Advisor: the "SECURITY DEFINER callable" warnings are by design (RPCs are the only write path); search_path warnings fixed.
+- For the next lanes: P3/P4/P5 call these through `apps/web/src/lib/rpc.ts`, which doesn't exist yet; whoever touches it first creates it. Use `select=*,sla_status_of,sla_ratio` on `requests` for SLA badges. Staff tabs should call `run_escalation_sweep()` every 30s.
+- Manual steps for Studio: none new.
 
 ### Setup check (2026-10-11 15:10)
 - All green: lint, typecheck, web tests, web build, AI tests, `db push` ("up to date"), engine/RLS tests 25/25.

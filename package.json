@@ -33,6 +33,7 @@
     "eslint": "9.39.5",
     "eslint-plugin-react-hooks": "5.2.0",
     "globals": "15.15.0",
+    "postgres": "3.4.9",
     "prettier": "3.9.10",
     "supabase": "2.120.0",
     "tsx": "4.23.15",
