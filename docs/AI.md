@@ -77,7 +77,7 @@ Uses `categories.keywords`: English, Devanagari Hindi/Marathi, and romanised for
 
 ## Duplicate detection (local ML, works offline)
 
-- Model: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` through **fastembed** (ONNX, CPU, fits in 512 MB), loaded once at startup. Downloaded in the Render build step, never on demo day. Suggestions use provider `local`. Confirm fastembed still lists this model; if not, pick its closest multilingual model and record it in PROGRESS.md.
+- Model: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` as an int8 ONNX export run by onnxruntime with its own sentencepiece tokenizer (CPU, ~260 MB; fastembed went over Render's 512 MB), loaded once at startup. Downloaded in the Render build step, never on demo day. Suggestions use provider `local`. Confirm fastembed still lists this model; if not, pick its closest multilingual model and record it in PROGRESS.md.
 - Candidates: non-terminal requests in the last 72 sim-hours that are in the same ward or within 500 m.
 - Score = 0.6 × cosine(description embeddings) + 0.25 × (same suggested category) + 0.15 × proximity (1 at 0 m, linear to 0 at 500 m).
 - Suggest when the score is ≥ 0.75. Payload: `{candidate_request_id, ticket_no, score, distance_m, cosine}`. Only the Manager can merge.

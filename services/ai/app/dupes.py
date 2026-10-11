@@ -7,6 +7,9 @@ from pathlib import Path
 import numpy as np
 
 MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+# Same model, int8 ONNX export, tokenised with its own sentencepiece file. fastembed's HF tokenizer alone took
+# ~250 MB and pushed Render's free 512 MB over the edge; this path peaks ~260 MB with identical vectors.
+ONNX = ("Xenova/paraphrase-multilingual-MiniLM-L12-v2", "onnx/model_quantized.onnx")
 CACHE = str(Path(__file__).resolve().parent.parent / "models")  # filled by the Render build step
 # docs/AI.md says 0.75, but Marathi-vs-Hindi paraphrases score only ~0.53 cosine with this model, so the demo
 # pair (000142 vs 000131, 250 m apart) lands at ~0.64. Calibration knob: DUPLICATE_THRESHOLD.
@@ -17,14 +20,28 @@ _model = None
 def model():
     global _model
     if _model is None:
-        from fastembed import TextEmbedding
+        import onnxruntime as ort
+        import sentencepiece as spm
+        from huggingface_hub import hf_hub_download
 
-        _model = TextEmbedding(MODEL, cache_dir=CACHE)
+        sp = spm.SentencePieceProcessor(model_file=hf_hub_download(MODEL, "sentencepiece.bpe.model", cache_dir=CACHE))
+        opts = ort.SessionOptions()
+        opts.intra_op_num_threads = 1
+        onnx = hf_hub_download(*ONNX, cache_dir=CACHE)
+        _model = sp, ort.InferenceSession(onnx, opts, providers=["CPUExecutionProvider"])
     return _model
 
 
 def embed(texts: list[str]) -> np.ndarray:
-    v = np.array(list(model().embed(texts)))
+    """XLM-R ids (fairseq offset: <s>=0, pad=1, </s>=2, unk=3, piece+1), mean pooling, L2 norm."""
+    sp, sess = model()
+    ids = [[0] + [t + 1 if t else 3 for t in sp.encode(x)][:126] + [2] for x in texts]
+    a = np.ones((len(ids), max(map(len, ids))), np.int64)
+    mask = np.zeros_like(a)
+    for i, x in enumerate(ids):
+        a[i, : len(x)], mask[i, : len(x)] = x, 1
+    h = sess.run(None, {"input_ids": a, "attention_mask": mask, "token_type_ids": np.zeros_like(a)})[0]
+    v = (h * mask[..., None]).sum(1) / mask.sum(1, keepdims=True)
     return v / np.linalg.norm(v, axis=1, keepdims=True)
 
 
