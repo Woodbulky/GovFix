@@ -96,13 +96,17 @@ export function ReportPage() {
 
   return (
     <section className="card mx-auto max-w-[760px] space-y-6 rounded-[24px_24px_24px_6px] p-5 sm:p-8">
-      <h1 className="text-3xl">{t('nav.report')}</h1>
+      <p className="eyebrow">{t('app.org')}</p>
+      <h1 className="!mt-2 text-4xl">{t('nav.report')}</h1>
       <ol className="flex gap-2" aria-label={t('report.progress')}>
         {STEPS.map((s, i) => (
           <li
             key={s}
             aria-current={i === step ? 'step' : undefined}
-            className={cn('flex-1 border-t-4 pt-2 text-sm', i < step ? 'border-nmc-600' : i === step ? 'border-marigold font-semibold' : 'border-line text-ink-muted')}
+            className={cn(
+              'flex-1 border-t-4 pt-2 text-sm',
+              i < step ? 'border-nmc-600' : i === step ? 'border-marigold font-semibold' : 'border-line text-ink-muted',
+            )}
           >
             {i + 1}. {t(`report.step.${s}`)}
           </li>
@@ -131,7 +135,12 @@ export function ReportPage() {
                       onChange={() => setCategory(code)}
                       className="sr-only"
                     />
-                    <span className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-md', TINT[icon ?? ''] ?? TINT['circle-help'])}>
+                    <span
+                      className={cn(
+                        'grid h-10 w-10 shrink-0 place-items-center rounded-md',
+                        TINT[icon ?? ''] ?? TINT['circle-help'],
+                      )}
+                    >
                       <CategoryIcon name={icon} size={22} />
                     </span>
                     {catName(code)}

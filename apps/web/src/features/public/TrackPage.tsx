@@ -28,10 +28,11 @@ export function TrackPage() {
 
   return (
     <section className="space-y-6">
-      <h1 className="text-3xl">{t('nav.track')}</h1>
+      <p className="eyebrow">{t('app.org')}</p>
+      <h1 className="!mt-2 text-4xl">{t('nav.track')}</h1>
       <form
         onSubmit={(e) => void submit(e)}
-        className="grid max-w-[640px] gap-4 sm:grid-cols-[2fr_1fr_auto] sm:items-end"
+        className="card grid gap-4 p-5 sm:grid-cols-[2fr_1fr_auto] sm:items-end sm:p-6"
       >
         <label>
           <span className="font-medium">{t('track.ticket')}</span>
@@ -48,7 +49,10 @@ export function TrackPage() {
             className={`tabular ${input}`}
           />
         </label>
-        <button disabled={busy} className="min-h-[var(--touch)] rounded-md bg-nmc px-5 font-semibold text-white">
+        <button
+          disabled={busy}
+          className="min-h-[var(--touch)] rounded-sm bg-nmc px-5 font-bold text-white hover:bg-nmc-600"
+        >
           {t('track.submit')}
         </button>
       </form>

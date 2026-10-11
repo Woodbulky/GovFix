@@ -66,7 +66,7 @@ export function Board() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl">{t('nav.board')}</h1>
+      <h1 className="text-3xl">{t('nav.board')}</h1>
       <p className="text-sm text-ink-muted">{t('staff.boardHint')}</p>
       <DndContext sensors={sensors} onDragEnd={onDragEnd}>
         <div className="flex gap-3 overflow-x-auto pb-4">
@@ -93,7 +93,7 @@ function Column({ state, cards }: { state: State; cards: StaffRequest[] }) {
     <div
       ref={setNodeRef}
       aria-label={t(`state.${state}`)}
-      className={cn('min-w-[11rem] flex-1 space-y-2 rounded-lg bg-surface p-2 ring-nmc', isOver && 'ring-2')}
+      className={cn('card min-w-[11rem] flex-1 space-y-2 p-2 ring-nmc-600', isOver && 'ring-2')}
     >
       <h2 className="flex items-center justify-between px-1 text-base">
         <StatusChip state={state} />

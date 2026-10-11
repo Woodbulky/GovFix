@@ -53,7 +53,11 @@ export function HeaderControls() {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <SimTimeBadge />
-      <div role="group" aria-label={t('lang.label')} className="flex gap-0.5 rounded-md border border-line bg-surface p-0.5">
+      <div
+        role="group"
+        aria-label={t('lang.label')}
+        className="flex gap-0.5 rounded-md border border-line bg-surface p-0.5"
+      >
         {LANGS.map((l) => (
           <button
             key={l}

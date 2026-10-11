@@ -63,9 +63,7 @@ html.large-text {
 body {
   @apply font-sans text-base text-ink;
   line-height: 1.55;
-  background:
-    radial-gradient(circle at 9% 42%, rgb(216 238 232 / 0.38), transparent 25%),
-    var(--paper);
+  background: radial-gradient(circle at 9% 42%, rgb(216 238 232 / 0.38), transparent 25%), var(--paper);
   background-attachment: fixed;
 }
 :lang(hi) body,

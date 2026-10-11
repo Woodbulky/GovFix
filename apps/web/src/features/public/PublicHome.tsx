@@ -1,4 +1,13 @@
-import { ChevronRight, ClipboardCheck, FilePlus, Map as MapIcon, Mic, ScrollText, ShieldCheck, Wrench } from 'lucide-react';
+import {
+  ChevronRight,
+  ClipboardCheck,
+  FilePlus,
+  Map as MapIcon,
+  Mic,
+  ScrollText,
+  ShieldCheck,
+  Wrench,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate } from 'react-router-dom';
 import { HOME } from '@/app/access';
@@ -23,7 +32,9 @@ export function CategoryTiles() {
             to={`/report?category=${c.code}`}
             className="card group flex min-h-[96px] items-center gap-3 p-4 transition hover:-translate-y-1 hover:border-nmc-600 hover:shadow-md"
           >
-            <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-md ${TINT[c.icon ?? ''] ?? TINT['circle-help']}`}>
+            <span
+              className={`grid h-12 w-12 shrink-0 place-items-center rounded-md ${TINT[c.icon ?? ''] ?? TINT['circle-help']}`}
+            >
               <CategoryIcon name={c.icon} size={26} />
             </span>
             <span className="flex-1 font-semibold">{nameOf(c, i18n.language)}</span>

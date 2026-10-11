@@ -103,7 +103,10 @@ function SidebarProfile() {
     .toUpperCase();
   return (
     <div className="flex items-center gap-3 border-t border-mint/15 pt-4">
-      <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-sm bg-mint text-sm font-bold text-nmc">
+      <span
+        aria-hidden
+        className="grid h-9 w-9 shrink-0 place-items-center rounded-sm bg-mint text-sm font-bold text-nmc"
+      >
         {initials}
       </span>
       <span className="min-w-0 text-sm leading-tight">

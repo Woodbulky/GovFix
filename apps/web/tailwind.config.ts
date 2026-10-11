@@ -8,7 +8,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        nmc: { DEFAULT: 'rgb(var(--nmc-green-rgb) / <alpha-value>)', 600: 'rgb(var(--nmc-green-600-rgb) / <alpha-value>)' },
+        nmc: {
+          DEFAULT: 'rgb(var(--nmc-green-rgb) / <alpha-value>)',
+          600: 'rgb(var(--nmc-green-600-rgb) / <alpha-value>)',
+        },
         canopy: 'rgb(var(--canopy-rgb) / <alpha-value>)',
         paper: 'rgb(var(--paper-rgb) / <alpha-value>)',
         surface: v('surface'),
