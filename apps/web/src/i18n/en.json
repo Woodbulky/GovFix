@@ -123,7 +123,8 @@
     "network": "Couldn't reach the server. Check your connection and try again."
   },
   "home": {
-    "categories": "What can you report?"
+    "categories": "What can you report?",
+    "exploreCity": "Explore the city"
   },
   "how": {
     "title": "How it works",
@@ -176,7 +177,8 @@
   "place": {
     "ward": "Ward {{n}} {{name}}",
     "near": "Near {{landmark}}, {{ward}}",
-    "outside": "That spot is outside Navnagar. Pick a point inside the city."
+    "outside": "That spot is outside Navnagar. Pick a point inside the city.",
+    "river": "That spot is in the river. Pick a point on land or on a bridge."
   },
   "map": {
     "label": "Map of Navnagar"
@@ -587,6 +589,104 @@
       "department": "Department",
       "wards": "Wards",
       "language": "Language"
+    }
+  },
+  "city": {
+    "canvasLabel": "3D map of Navnagar. Arrow keys move, plus and minus zoom, Q and E turn.",
+    "loading": "Building Navnagar…",
+    "loadFailed": "The 3D city couldn't start, so this is the 2D map.",
+    "noWebgl": "This device can't show the 3D city, so this is the 2D map.",
+    "lite": "Lite mode (2D)",
+    "full": "3D city",
+    "modeLabel": "How to move",
+    "mode": {
+      "overview": "Overview",
+      "fly": "Fly",
+      "walk": "Walk"
+    },
+    "layers": "Layers",
+    "layer": {
+      "wards": "Ward boundaries",
+      "labels": "Place names",
+      "traffic": "Traffic and birds",
+      "followSim": "Day and night follow sim time",
+      "complaints": "Complaints",
+      "props": "Problems in the street",
+      "heat": "Past deadline by ward"
+    },
+    "searchLabel": "Find a ticket, landmark or ward",
+    "searchPlaceholder": "Ticket, landmark or ward",
+    "searchNone": "No match. Try a landmark or ward name.",
+    "wardN": "Ward {{n}}",
+    "showing": "Showing {{place}}",
+    "minimap": "Minimap. Click a spot to go there.",
+    "youAreIn": "You're in {{ward}}",
+    "outside": "Outside the city",
+    "lockHint": "Click the city to look around with the mouse. Esc gives the mouse back.",
+    "keysHint": "Keyboard: arrows to move and turn, Page Up and Page Down to look up and down.",
+    "help": {
+      "title": "Getting around",
+      "overview": "Overview: drag to move the map, scroll or pinch to zoom, right-drag or two fingers to rotate. Keys: arrows, + and −, Q and E.",
+      "fly": "Fly: W A S D or arrows to move, mouse to look, Shift to go faster, Q and E for down and up.",
+      "walk": "Walk: W A S D or arrows at street level, mouse to look. Buildings and the river stop you; bridges don't.",
+      "close": "Got it",
+      "open": "How to move"
+    },
+    "legend": {
+      "title": "Map key",
+      "ward": "Ward boundary",
+      "river": "Navnadi river",
+      "rail": "Railway",
+      "road": "Main road",
+      "landmark": "Landmark name",
+      "escalated": "Escalated",
+      "mine": "Yours"
+    },
+    "stats": "{{fps}} fps · {{calls}} draw calls · {{tris}}k triangles",
+    "complaints": "Complaints on the map",
+    "shownAll": "Complaints: {{n}}",
+    "shownOf": "Complaints: {{n}} of {{total}}",
+    "noneShown": "No complaints match this filter.",
+    "clearFilter": "Clear filter",
+    "nextDeadline": "Next by deadline",
+    "cluster": "{{ward}}: {{n}} complaints, {{breached}} past deadline",
+    "clusterPast": "{{n}} past deadline",
+    "photoOf": "Photo reported with {{ticket}}",
+    "proofOf": "Proof photo for {{ticket}}",
+    "prevPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "pin": {
+      "unknown": "Complaint",
+      "yours": "Yours",
+      "age": "{{dur}} old",
+      "private": "Details and photos are shown only to the person who reported it and to NMC staff.",
+      "openMine": "Open my complaint",
+      "openRequest": "Open request",
+      "reportPhoto": "Reported photo",
+      "proofPhoto": "Proof of fix"
+    },
+    "filter": {
+      "status": "Show",
+      "all": "All",
+      "open": "Open",
+      "past_deadline": "Past deadline",
+      "resolved": "Resolved",
+      "category": "Category",
+      "anyCategory": "Any category",
+      "ward": "Ward {{n}} only.",
+      "anyWard": "Show every ward",
+      "mine": "Only my complaints",
+      "mineStaff": "Only requests assigned to me"
+    },
+    "picker": {
+      "label": "3D map of Navnagar. Click the spot of the problem.",
+      "hint": "Click the spot where the problem is.",
+      "drag": "Drag the pin to adjust, or click somewhere else.",
+      "use2d": "Use the 2D map instead",
+      "use3d": "Use the 3D city"
+    },
+    "tool": {
+      "notFound": "No matching place or visible ticket"
     }
   }
 }

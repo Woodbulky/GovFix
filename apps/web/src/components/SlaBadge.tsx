@@ -15,7 +15,8 @@ import { fmtWhen, splitDuration } from '@/lib/time';
 /** Values of the SQL `sla_status_of(requests)` computed field. */
 export type SlaStatus = 'untriaged' | 'on_track' | 'at_risk' | 'breached' | 'paused' | 'done';
 
-const STYLE: Record<SlaStatus, [LucideIcon, string]> = {
+/** [icon, colour] per SLA status; the city pins use it too, so status colours live in one place. */
+export const SLA_STYLE: Record<SlaStatus, [LucideIcon, string]> = {
   untriaged: [Clock, 'var(--st-submitted)'],
   on_track: [CalendarClock, 'var(--sla-ok)'],
   at_risk: [Hourglass, 'var(--sla-risk)'],
@@ -46,7 +47,7 @@ export function SlaBadge({ status, dueAt, audience = 'staff' }: Props) {
   const { t, i18n } = useTranslation();
   const now = useSimNow();
   const s = (status ?? 'untriaged') as SlaStatus;
-  const [Icon, color] = STYLE[s] ?? STYLE.untriaged;
+  const [Icon, color] = SLA_STYLE[s] ?? SLA_STYLE.untriaged;
   const left = dueAt ? new Date(dueAt).getTime() - now.getTime() : null;
 
   const label =

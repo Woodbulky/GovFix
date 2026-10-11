@@ -1,11 +1,331 @@
 {
-  "_note": "STUB from Lane A (P1): 10 rectangular wards + 16 landmarks so the database has a city. Lane D replaces this with the full layout (docs/CITY.md); keep ward ids and landmark names stable, then run npm run gen:city.",
+  "_note": "Navnagar layout (docs/CITY.md). Ward polygons and landmark points feed supabase/seed/02_city.sql via npm run gen:city: keep ward ids and landmark order stable. Lanes inside wards are generated from the seed; arterial and main roads are listed here.",
   "seed": "navnagar",
-  "bounds": { "minX": -1200, "maxX": 1200, "minZ": -1200, "maxZ": 1200 },
+  "bounds": {
+    "minX": -1200,
+    "maxX": 1200,
+    "minZ": -1200,
+    "maxZ": 1200
+  },
+  "river": {
+    "name": {
+      "en": "Navnadi",
+      "hi": "नवनदी",
+      "mr": "नवनदी"
+    },
+    "width": 54,
+    "points": [
+      [-1300, 395],
+      [-1000, 415],
+      [-800, 445],
+      [-600, 488],
+      [-450, 487],
+      [-300, 466],
+      [-200, 452],
+      [-50, 440],
+      [100, 438],
+      [250, 447],
+      [400, 462],
+      [550, 478],
+      [700, 496],
+      [900, 512],
+      [1100, 525],
+      [1300, 540]
+    ],
+    "bridges": [
+      {
+        "name": "Juna Pool",
+        "style": "stone",
+        "x": -200,
+        "z": 450
+      },
+      {
+        "name": "Navin Pool",
+        "style": "concrete",
+        "x": 250,
+        "z": 448
+      }
+    ]
+  },
+  "railway": {
+    "points": [
+      [700, -1300],
+      [700, -500],
+      [695, -100],
+      [700, 300],
+      [712, 640],
+      [725, 900],
+      [740, 1300]
+    ],
+    "station": {
+      "x": 700,
+      "z": -100
+    }
+  },
+  "roads": [
+    {
+      "name": "Station Road",
+      "type": "arterial",
+      "points": [
+        [-1200, -70],
+        [-900, -80],
+        [-600, -95],
+        [-300, -100],
+        [0, -100],
+        [350, -100],
+        [660, -100]
+      ]
+    },
+    {
+      "name": "Nagar Road",
+      "type": "arterial",
+      "points": [
+        [-220, -1200],
+        [-210, -900],
+        [-180, -680],
+        [-100, -400],
+        [0, -100],
+        [90, 150],
+        [200, 330],
+        [250, 448],
+        [255, 600],
+        [230, 880],
+        [180, 1200]
+      ]
+    },
+    {
+      "name": "Vidya Marg",
+      "type": "arterial",
+      "points": [
+        [-1200, -560],
+        [-800, -610],
+        [-450, -660],
+        [-180, -680],
+        [0, -680],
+        [300, -700],
+        [700, -740],
+        [1200, -760]
+      ]
+    },
+    {
+      "name": "IT Park Road",
+      "type": "arterial",
+      "points": [
+        [-1200, 790],
+        [-800, 800],
+        [-300, 820],
+        [100, 860],
+        [500, 860],
+        [900, 880],
+        [1200, 890]
+      ]
+    },
+    {
+      "name": "Juna Pool Road",
+      "type": "main",
+      "points": [
+        [0, -100],
+        [-70, 60],
+        [-140, 250],
+        [-200, 450],
+        [-250, 620],
+        [-330, 820],
+        [-420, 1200]
+      ]
+    },
+    {
+      "name": "Ghat Road",
+      "type": "main",
+      "points": [
+        [-1200, 360],
+        [-950, 380],
+        [-700, 410],
+        [-520, 425],
+        [-350, 420],
+        [-183, 395]
+      ]
+    },
+    {
+      "name": "Nadi Marg",
+      "type": "main",
+      "points": [
+        [-1200, 520],
+        [-900, 500],
+        [-600, 545],
+        [-300, 525],
+        [-190, 512],
+        [0, 500],
+        [248, 505]
+      ]
+    },
+    {
+      "name": "Nadi Marg North",
+      "type": "main",
+      "points": [
+        [-183, 395],
+        [0, 385],
+        [221, 380],
+        [400, 410],
+        [500, 425],
+        [650, 400],
+        [790, 250]
+      ]
+    },
+    {
+      "name": "Lakeview Road",
+      "type": "main",
+      "points": [
+        [560, -1200],
+        [540, -900],
+        [520, -700],
+        [480, -400],
+        [460, -100],
+        [468, 150],
+        [480, 300],
+        [500, 425]
+      ]
+    },
+    {
+      "name": "Station East Road",
+      "type": "main",
+      "points": [
+        [760, -1200],
+        [775, -930],
+        [780, -700],
+        [790, -100],
+        [790, 250]
+      ]
+    },
+    {
+      "name": "Bazaar Peth Road",
+      "type": "main",
+      "points": [
+        [460, -290],
+        [800, -295],
+        [1200, -300]
+      ]
+    },
+    {
+      "name": "Society Road",
+      "type": "main",
+      "points": [
+        [540, -1120],
+        [900, -1125],
+        [1200, -1135]
+      ]
+    },
+    {
+      "name": "Udyog Road",
+      "type": "main",
+      "points": [
+        [255, 650],
+        [560, 630],
+        [900, 640],
+        [1200, 650]
+      ]
+    },
+    {
+      "name": "WTP Road",
+      "type": "main",
+      "points": [
+        [765, 640],
+        [780, 880],
+        [800, 1200]
+      ]
+    },
+    {
+      "name": "Hari Nagar Road",
+      "type": "main",
+      "points": [
+        [-850, 530],
+        [-840, 800],
+        [-860, 1200]
+      ]
+    },
+    {
+      "name": "Shala Road",
+      "type": "main",
+      "points": [
+        [-1200, 1000],
+        [-760, 1005],
+        [-345, 1020]
+      ]
+    },
+    {
+      "name": "Vasahat Road",
+      "type": "main",
+      "points": [
+        [-275, 690],
+        [248, 700]
+      ]
+    },
+    {
+      "name": "Bank Street",
+      "type": "main",
+      "points": [
+        [-300, -280],
+        [-100, -285],
+        [100, -290],
+        [350, -300]
+      ]
+    },
+    {
+      "name": "Mandai Lane",
+      "type": "main",
+      "points": [
+        [-300, 120],
+        [-60, 115],
+        [120, 110],
+        [350, 100]
+      ]
+    },
+    {
+      "name": "Peth Road",
+      "type": "main",
+      "points": [
+        [-1200, -300],
+        [-700, -295],
+        [-300, -290]
+      ]
+    },
+    {
+      "name": "Mandir Road",
+      "type": "main",
+      "points": [
+        [-1000, -400],
+        [-990, -100],
+        [-980, 300]
+      ]
+    },
+    {
+      "name": "College Road",
+      "type": "main",
+      "points": [
+        [230, -680],
+        [225, -950],
+        [220, -1200]
+      ]
+    },
+    {
+      "name": "Tekdi Road",
+      "type": "lane",
+      "points": [
+        [-800, -610],
+        [-760, -700],
+        [-820, -780],
+        [-800, -850],
+        [-840, -882]
+      ]
+    }
+  ],
   "wards": [
     {
       "id": 1,
-      "name": { "en": "Juna Bazaar", "hi": "जुना बाज़ार", "mr": "जुना बाजार" },
+      "name": {
+        "en": "Juna Bazaar",
+        "hi": "जुना बाज़ार",
+        "mr": "जुना बाजार"
+      },
       "zone": "old_city",
       "polygon": [
         [-1200, -400],
@@ -16,7 +336,11 @@
     },
     {
       "id": 2,
-      "name": { "en": "Nadi Kinara", "hi": "नदी किनारा", "mr": "नदी किनारा" },
+      "name": {
+        "en": "Nadi Kinara",
+        "hi": "नदी किनारा",
+        "mr": "नदी किनारा"
+      },
       "zone": "riverfront",
       "polygon": [
         [-1200, 300],
@@ -27,7 +351,11 @@
     },
     {
       "id": 3,
-      "name": { "en": "Station Road", "hi": "स्टेशन रोड", "mr": "स्टेशन रोड" },
+      "name": {
+        "en": "Station Road",
+        "hi": "स्टेशन रोड",
+        "mr": "स्टेशन रोड"
+      },
       "zone": "commercial",
       "polygon": [
         [350, -400],
@@ -38,7 +366,11 @@
     },
     {
       "id": 4,
-      "name": { "en": "Vidya Nagar", "hi": "विद्या नगर", "mr": "विद्यानगर" },
+      "name": {
+        "en": "Vidya Nagar",
+        "hi": "विद्या नगर",
+        "mr": "विद्यानगर"
+      },
       "zone": "campus",
       "polygon": [
         [-400, -1200],
@@ -49,7 +381,11 @@
     },
     {
       "id": 5,
-      "name": { "en": "Lakeview", "hi": "लेकव्यू", "mr": "लेकव्ह्यू" },
+      "name": {
+        "en": "Lakeview",
+        "hi": "लेकव्यू",
+        "mr": "लेकव्ह्यू"
+      },
       "zone": "societies",
       "polygon": [
         [400, -1200],
@@ -60,7 +396,11 @@
     },
     {
       "id": 6,
-      "name": { "en": "Udyog Nagar", "hi": "उद्योग नगर", "mr": "उद्योग नगर" },
+      "name": {
+        "en": "Udyog Nagar",
+        "hi": "उद्योग नगर",
+        "mr": "उद्योग नगर"
+      },
       "zone": "industrial",
       "polygon": [
         [500, 300],
@@ -71,7 +411,11 @@
     },
     {
       "id": 7,
-      "name": { "en": "Ghantaghar", "hi": "घंटाघर", "mr": "घंटाघर" },
+      "name": {
+        "en": "Ghantaghar",
+        "hi": "घंटाघर",
+        "mr": "घंटाघर"
+      },
       "zone": "centre",
       "polygon": [
         [-300, -400],
@@ -82,7 +426,11 @@
     },
     {
       "id": 8,
-      "name": { "en": "Tekdi Paytha", "hi": "टेकड़ी पायथा", "mr": "टेकडी पायथा" },
+      "name": {
+        "en": "Tekdi Paytha",
+        "hi": "टेकड़ी पायथा",
+        "mr": "टेकडी पायथा"
+      },
       "zone": "foothills",
       "polygon": [
         [-1200, -1200],
@@ -93,7 +441,11 @@
     },
     {
       "id": 9,
-      "name": { "en": "Hari Nagar", "hi": "हरि नगर", "mr": "हरी नगर" },
+      "name": {
+        "en": "Hari Nagar",
+        "hi": "हरि नगर",
+        "mr": "हरी नगर"
+      },
       "zone": "residential",
       "polygon": [
         [-1200, 600],
@@ -104,7 +456,11 @@
     },
     {
       "id": 10,
-      "name": { "en": "Navi Vasahat", "hi": "नवी वसाहत", "mr": "नवी वसाहत" },
+      "name": {
+        "en": "Navi Vasahat",
+        "hi": "नवी वसाहत",
+        "mr": "नवी वसाहत"
+      },
       "zone": "new_extension",
       "polygon": [
         [-300, 600],
@@ -116,100 +472,377 @@
   ],
   "landmarks": [
     {
-      "name": { "en": "Ghantaghar Chowk", "hi": "घंटाघर चौक", "mr": "घंटाघर चौक" },
+      "name": {
+        "en": "Ghantaghar Chowk",
+        "hi": "घंटाघर चौक",
+        "mr": "घंटाघर चौक"
+      },
       "x": 0,
       "z": -100,
       "aliases": ["ghantaghar", "ghantaghar chowk", "clock tower", "घंटाघर", "घंटाघर चौक"]
     },
     {
-      "name": { "en": "NMC Head Office", "hi": "नमनपा मुख्यालय", "mr": "नमनपा मुख्य कार्यालय" },
+      "name": {
+        "en": "NMC Head Office",
+        "hi": "नमनपा मुख्यालय",
+        "mr": "नमनपा मुख्य कार्यालय"
+      },
       "x": 60,
       "z": -160,
       "aliases": ["nmc office", "municipal office", "corporation office", "महानगरपालिका", "मनपा कार्यालय"]
     },
     {
-      "name": { "en": "Market Hall", "hi": "मार्केट हॉल", "mr": "मंडई हॉल" },
+      "name": {
+        "en": "Market Hall",
+        "hi": "मार्केट हॉल",
+        "mr": "मंडई हॉल"
+      },
       "x": -150,
       "z": 20,
       "aliases": ["market hall", "mandai hall", "मार्केट", "मंडई"]
     },
     {
-      "name": { "en": "Bhaji Mandai", "hi": "सब्ज़ी मंडी", "mr": "भाजी मंडई" },
+      "name": {
+        "en": "Bhaji Mandai",
+        "hi": "सब्ज़ी मंडी",
+        "mr": "भाजी मंडई"
+      },
       "x": -700,
       "z": -50,
       "aliases": ["bhaji mandai", "vegetable market", "sabzi mandi", "भाजी मंडई", "सब्ज़ी मंडी"]
     },
     {
-      "name": { "en": "Ganpati Mandir", "hi": "गणपति मंदिर", "mr": "गणपती मंदिर" },
+      "name": {
+        "en": "Ganpati Mandir",
+        "hi": "गणपति मंदिर",
+        "mr": "गणपती मंदिर"
+      },
       "x": -850,
       "z": 120,
       "aliases": ["ganpati mandir", "ganpati temple", "ganesh mandir", "गणपती मंदिर", "गणपति मंदिर"]
     },
     {
-      "name": { "en": "Nadi Ghat", "hi": "नदी घाट", "mr": "नदी घाट" },
+      "name": {
+        "en": "Nadi Ghat",
+        "hi": "नदी घाट",
+        "mr": "नदी घाट"
+      },
       "x": -500,
       "z": 450,
       "aliases": ["nadi ghat", "river ghat", "ghat", "नदी घाट", "घाट"]
     },
     {
-      "name": { "en": "Juna Pool", "hi": "जुना पुल", "mr": "जुना पूल" },
+      "name": {
+        "en": "Juna Pool",
+        "hi": "जुना पुल",
+        "mr": "जुना पूल"
+      },
       "x": -200,
       "z": 450,
       "aliases": ["juna pool", "old bridge", "जुना पूल", "पुराना पुल"]
     },
     {
-      "name": { "en": "Navin Pool", "hi": "नवीन पुल", "mr": "नवीन पूल" },
+      "name": {
+        "en": "Navin Pool",
+        "hi": "नवीन पुल",
+        "mr": "नवीन पूल"
+      },
       "x": 250,
       "z": 450,
       "aliases": ["navin pool", "new bridge", "नवीन पूल", "नया पुल"]
     },
     {
-      "name": { "en": "Railway Station", "hi": "रेलवे स्टेशन", "mr": "रेल्वे स्टेशन" },
+      "name": {
+        "en": "Railway Station",
+        "hi": "रेलवे स्टेशन",
+        "mr": "रेल्वे स्टेशन"
+      },
       "x": 700,
       "z": -100,
       "aliases": ["railway station", "station", "रेल्वे स्टेशन", "रेलवे स्टेशन", "स्टेशन"]
     },
     {
-      "name": { "en": "ST Stand", "hi": "एसटी बस स्टैंड", "mr": "एसटी स्टँड" },
+      "name": {
+        "en": "ST Stand",
+        "hi": "एसटी बस स्टैंड",
+        "mr": "एसटी स्टँड"
+      },
       "x": 520,
       "z": 50,
       "aliases": ["st stand", "bus stand", "एसटी स्टँड", "बस स्टँड", "बस स्टैंड"]
     },
     {
-      "name": { "en": "Vidya College Gate", "hi": "विद्या कॉलेज गेट", "mr": "विद्या महाविद्यालय प्रवेशद्वार" },
+      "name": {
+        "en": "Vidya College Gate",
+        "hi": "विद्या कॉलेज गेट",
+        "mr": "विद्या महाविद्यालय प्रवेशद्वार"
+      },
       "x": 0,
       "z": -700,
       "aliases": ["vidya college", "college gate", "विद्या कॉलेज", "कॉलेज गेट", "महाविद्यालय"]
     },
     {
-      "name": { "en": "Lake Garden", "hi": "लेक गार्डन", "mr": "तलाव उद्यान" },
+      "name": {
+        "en": "Lake Garden",
+        "hi": "लेक गार्डन",
+        "mr": "तलाव उद्यान"
+      },
       "x": 800,
       "z": -800,
       "aliases": ["lake garden", "lake", "talav", "तलाव", "लेक गार्डन", "झील"]
     },
     {
-      "name": { "en": "Water Treatment Plant", "hi": "जल शोधन संयंत्र", "mr": "जलशुद्धीकरण केंद्र" },
+      "name": {
+        "en": "Water Treatment Plant",
+        "hi": "जल शोधन संयंत्र",
+        "mr": "जलशुद्धीकरण केंद्र"
+      },
       "x": 850,
       "z": 700,
       "aliases": ["water treatment plant", "wtp", "jal shuddhikaran", "जलशुद्धीकरण केंद्र", "जल शोधन"]
     },
     {
-      "name": { "en": "Tekdi Water Tank", "hi": "टेकड़ी पानी की टंकी", "mr": "टेकडी पाण्याची टाकी" },
+      "name": {
+        "en": "Tekdi Water Tank",
+        "hi": "टेकड़ी पानी की टंकी",
+        "mr": "टेकडी पाण्याची टाकी"
+      },
       "x": -850,
       "z": -900,
       "aliases": ["tekdi tank", "water tank", "hill tank", "पाण्याची टाकी", "पानी की टंकी"]
     },
     {
-      "name": { "en": "Hari Nagar School", "hi": "हरि नगर स्कूल", "mr": "हरी नगर शाळा" },
+      "name": {
+        "en": "Hari Nagar School",
+        "hi": "हरि नगर स्कूल",
+        "mr": "हरी नगर शाळा"
+      },
       "x": -700,
       "z": 850,
       "aliases": ["hari nagar school", "school", "हरी नगर शाळा", "शाळा", "स्कूल"]
     },
     {
-      "name": { "en": "IT Park Gate", "hi": "आईटी पार्क गेट", "mr": "आयटी पार्क गेट" },
+      "name": {
+        "en": "IT Park Gate",
+        "hi": "आईटी पार्क गेट",
+        "mr": "आयटी पार्क गेट"
+      },
       "x": 100,
       "z": 900,
       "aliases": ["it park", "it park gate", "आयटी पार्क", "आईटी पार्क"]
+    }
+  ],
+  "parks": [
+    {
+      "name": "Lake Garden",
+      "kind": "garden",
+      "polygon": [
+        [790, -790],
+        [1120, -790],
+        [1120, -1045],
+        [790, -1045]
+      ]
+    },
+    {
+      "name": "College Ground",
+      "kind": "ground",
+      "polygon": [
+        [-120, -990],
+        [60, -990],
+        [60, -890],
+        [-120, -890]
+      ]
+    },
+    {
+      "name": "Hari Nagar Playground",
+      "kind": "ground",
+      "polygon": [
+        [-760, 885],
+        [-640, 885],
+        [-640, 965],
+        [-760, 965]
+      ]
+    },
+    {
+      "name": "Tekdi Van",
+      "kind": "forest",
+      "polygon": [
+        [-1150, -1180],
+        [-650, -1180],
+        [-620, -830],
+        [-760, -735],
+        [-1150, -770]
+      ]
+    },
+    {
+      "name": "Ghat Garden",
+      "kind": "garden",
+      "polygon": [
+        [-700, 418],
+        [-560, 430],
+        [-560, 452],
+        [-700, 440]
+      ]
+    }
+  ],
+  "lake": {
+    "name": "Navnagar Talav",
+    "polygon": [
+      [1088, -930],
+      [1076, -908],
+      [1063, -888],
+      [1050, -870],
+      [1015, -856],
+      [984, -848],
+      [958, -845],
+      [916, -848],
+      [885, -856],
+      [866, -870],
+      [837, -888],
+      [824, -908],
+      [828, -930],
+      [824, -952],
+      [837, -972],
+      [866, -990],
+      [885, -1004],
+      [916, -1012],
+      [958, -1015],
+      [984, -1012],
+      [1015, -1004],
+      [1050, -990],
+      [1063, -972],
+      [1076, -952]
+    ]
+  },
+  "hills": [
+    {
+      "name": "Tekdi",
+      "x": -900,
+      "z": -960,
+      "radius": 170,
+      "height": 75
+    },
+    {
+      "name": "Sahyadri ridge W",
+      "x": -1700,
+      "z": -2200,
+      "radius": 420,
+      "height": 240,
+      "backdrop": true
+    },
+    {
+      "name": "Sahyadri ridge",
+      "x": -400,
+      "z": -2450,
+      "radius": 480,
+      "height": 300,
+      "backdrop": true
+    },
+    {
+      "name": "Sahyadri ridge E",
+      "x": 900,
+      "z": -2250,
+      "radius": 400,
+      "height": 230,
+      "backdrop": true
+    },
+    {
+      "name": "Purva tekdi",
+      "x": 2100,
+      "z": -1500,
+      "radius": 380,
+      "height": 170,
+      "backdrop": true
+    },
+    {
+      "name": "Paschim tekdi",
+      "x": -2300,
+      "z": -900,
+      "radius": 360,
+      "height": 150,
+      "backdrop": true
+    }
+  ],
+  "special": [
+    {
+      "type": "clock_tower",
+      "x": 0,
+      "z": -100
+    },
+    {
+      "type": "municipal_hq",
+      "x": 60,
+      "z": -160
+    },
+    {
+      "type": "market_hall",
+      "x": -150,
+      "z": 20
+    },
+    {
+      "type": "vegetable_market",
+      "x": -700,
+      "z": -45
+    },
+    {
+      "type": "temple",
+      "x": -850,
+      "z": 120
+    },
+    {
+      "type": "ghat",
+      "x": -500,
+      "z": 448
+    },
+    {
+      "type": "station",
+      "x": 700,
+      "z": -100
+    },
+    {
+      "type": "bus_stand",
+      "x": 525,
+      "z": 50
+    },
+    {
+      "type": "college",
+      "x": 20,
+      "z": -760
+    },
+    {
+      "type": "college_gate",
+      "x": 0,
+      "z": -700
+    },
+    {
+      "type": "water_tank",
+      "x": -850,
+      "z": -900
+    },
+    {
+      "type": "school",
+      "x": -700,
+      "z": 858
+    },
+    {
+      "type": "it_park",
+      "x": 40,
+      "z": 1030
+    },
+    {
+      "type": "water_treatment_plant",
+      "x": 880,
+      "z": 730
+    },
+    {
+      "type": "construction",
+      "x": -200,
+      "z": 1090
+    },
+    {
+      "type": "construction",
+      "x": 380,
+      "z": 760
     }
   ]
 }
